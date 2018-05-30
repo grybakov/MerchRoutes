@@ -154,7 +154,6 @@ def makeRouteAutoStart(request):
         geo_dict.fromkeys(['address', 'point_lat', 'point_lng'])
         geo_dict['address'] = point
         queryset = MarketModel.objects.filter(market_address_ru=point).values()
-        print(str(queryset))
         geo_dict['point_lat'] = queryset[0]['market_lat']
         geo_dict['point_lng'] = queryset[0]['market_lng']
         geo_list.append(geo_dict)
