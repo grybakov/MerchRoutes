@@ -1,0 +1,15 @@
+*.pyc
+*~
+__pycache__
+pyvenv
+pyvenv.cfg
+/Include
+/addr_market_lists
+/static
+/Scripts
+/Lib
+/mroute/management/commands/makeDKSlist.py
+/mroute/management/commands/makeKRSlist.py
+/mroute/management/commands/makePRKSlist.py
+.idea
+.DS_Store

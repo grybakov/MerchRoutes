@@ -1,0 +1,96 @@
+{% load bootstrap3 %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="rybakovgeorg@gmail.com">
+    <link rel="icon" href="https://getbootstrap.com/docs/3.3/favicon.ico">
+
+    <title>MerchRoutes Dashboard - Новое&Вкусное</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+
+  <style>
+.selector-for-some-widget {
+  box-sizing: content-box;
+}
+</style>
+</head>
+<body>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src=" {% static "js/bootstrap.min.js" %}"></script>
+<script src=" {% static "js/bootstrap3-typeahead.min.js" %}"></script>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+<div class="container">
+<div class="navbar-header">
+  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+  </button>
+<a class="navbar-brand" href="#">MerchRoutes</a>
+</div>
+<div class="navbar-collapse collapse">
+  <ul class="nav navbar-nav">
+    <li class="active"><a href="/">Проект</a></li>
+    <li><a href="addmarket/">Добавить</a></li>
+    <!-- <li><a href="#contact">Contact</a></li> -->
+    <!-- <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+  <ul class="dropdown-menu">
+  <li><a href="#">Action</a></li>
+<li><a href="#">Another action</a></li>
+<li><a href="#">Something else here</a></li>
+<li class="divider"></li>
+<li class="dropdown-header">Nav header</li>
+<li><a href="#">Separated link</a></li>
+<li><a href="#">One more separated link</a></li>
+</ul>
+</li> -->
+</ul>
+<ul class="nav navbar-nav navbar-right">
+    <!-- <li><a href="../navbar/">Default</a></li>
+    <li class="active"><a href="./">Static top</a></li> -->
+    <li><a href="news/">Новое!</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<div class="container">
+<h2>Добавить</h2>
+
+    {% bootstrap_messages %}
+
+    <form method="POST" class="post-form">{% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="save btn btn-default">Сохранить</button>
+    </form>
+
+<div class="row"></br></div>
+<div class="row"></br></div>
+
+</div>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted"><span class="glyphicon glyphicon-fire"></span> 2018 г. - Сделано для хороших людей.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
+
