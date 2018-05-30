@@ -1,6 +1,5 @@
-===================
 Merchant Routes
-===================
+====================
 
 The Merchant Routes is an open source application for creating routes for foot merchandisers, couriers, etc.
 In Merchant Routes uses Google Maps API (Directions API, Geocoding API)
@@ -8,12 +7,12 @@ In Merchant Routes uses Google Maps API (Directions API, Geocoding API)
 Main Features
 ---------------
 * Points
- - In db.sqlite3 file includes data on stores «Diksi», «Karusel'», «Perekrestok», «BILLA», «Viktoriya», «TD Holding-Centr»
- - All points you can see in map.
- - You can add additional points in two ways:
-  + If you want to add one or more points - this can be done from the UI application.
-  + If you need to add many points - use the command:
-  .. code:: python
+ * In db.sqlite3 file includes data on stores «Diksi», «Karusel'», «Perekrestok», «BILLA», «Viktoriya», «TD Holding-Centr»
+ * All points you can see in map.
+ * You can add additional points in two ways:
+  * If you want to add one or more points - this can be done from the UI application.
+  * If you need to add many points - use the command:
+
   python manage.py loadmarket <file.txt>
 
 * Routes
