@@ -215,14 +215,15 @@ def makeRouteAutoStart(request):
             # Поиск минимального в итерации
             if count_time < min_time_iter:
                 min_time_iter = count_time
+                iter_routes = copy.deepcopy(routes)
 
-        iter_goolist = routes
+        iter_goolist = copy.deepcopy(iter_routes)
 
         # Поиск минимального во всех итерациях
         if min_time_iter < min_time_total:
             min_time_total = min_time_iter
             # Сохраняем оптимальный маршрут
-            total_goolist = iter_goolist
+            total_goolist = copy.deepcopy(iter_goolist)
 
     response = {'day': load_day, 'data': total_goolist, 'status': 'OK'}
     return JsonResponse(response)
