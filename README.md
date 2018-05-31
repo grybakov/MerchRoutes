@@ -13,7 +13,7 @@ Main Features
     - If you want to add one or more points - this can be done from the UI application.
     - If you need to add many points - use the django-admin command:
 
-    > python manage.py loadmarket <file.txt>
+      > python manage.py loadmarket <file.txt>
 
 - Routes
   - Determination of the optimal walking route for given points for a given starting point.
