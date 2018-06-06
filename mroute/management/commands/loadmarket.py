@@ -17,16 +17,6 @@ class Command(BaseCommand):
         # https://developers.google.com/maps/documentation/geocoding/intro
 
         GOOGLE_API_KEY_GEOCODE = 'AIzaSyA_M1UNrgnO7gOnafPEFtTwHdWozBQG5zo'
-        # NET = 'KRS' ok!
-        # NET = 'BLL' ok!
-        # NET = 'VKTR' ok!
-        # NET = 'DKS'  # Москва (21) Дубли: ул. Судостроительная, ул.Шверника - ок!
-        # NET = 'PRKRS'  # Москва и область (357 шт.) - ok!
-        # Не нашлось:
-        # Московская Обл., г. Давыдовское, Дачная
-        # пос.Бужаровское, д.Сафонтьево, 62
-        # КИЗ Горки-8, 275
-        # NET = 'HZ'  # (4 шт.)
         NET = ''
 
         error_count = 0

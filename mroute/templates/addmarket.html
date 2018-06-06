@@ -60,7 +60,8 @@
 
     {% bootstrap_messages %}
 
-    <form method="POST" class="post-form">{% csrf_token %}
+    <form method="POST" class="post-form">
+        {% csrf_token %}
         {% bootstrap_form form %}
         <button type="submit" class="save btn btn-default">Сохранить</button>
     </form>

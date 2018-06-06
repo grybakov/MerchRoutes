@@ -78,6 +78,12 @@
     <label class="checkbox-inline">
         <input type="checkbox" id="HZCheckbox" value="option6"> ТД "Холдинг-Центр"
     </label>
+    <label class="checkbox-inline">
+        <input type="checkbox" id="MGTCheckbox" value="option7"> Магнит
+    </label>
+    <label class="checkbox-inline">
+        <input type="checkbox" id="PTRKCheckbox" value="option7"> Пятерочка
+    </label>
     <div class="row"></br></div>
 
 <script>
@@ -88,10 +94,76 @@
     var BLL_markers = [];
     var DKS_markers = [];
     var HZ_markers = [];
+    var MGT_markers = [];
+    var PTRK_markers = [];
 
     $(window).load(function(){
         var map;
         initMap();
+    });
+
+    // for MGT_markers
+    $('#PTRKCheckbox').change(function() {
+         if (this.checked) {
+            $.get("getMarkets/", {'NET':'PTRK'}, function(data){
+                PTRK_data_markets = JSON.parse(JSON.stringify(data));
+                for (i = 0; i < PTRK_data_markets.data.length; i++) {
+                    PTRK_marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(PTRK_data_markets.data[i]['market_lat'], PTRK_data_markets.data[i]['market_lng']),
+                        map: map //,
+                        //icon: {
+                        //    url: 'https://dixy.ru/local/templates/dixy/images/icon-map.png',
+                        //    scaledSize: new google.maps.Size(22, 35)
+                        //}
+                    });
+                    PTRK_markers.push(PTRK_marker);
+                    google.maps.event.addListener(PTRK_marker, 'click', (function(PTRK_marker, i) {
+                    var PTRKinfoWindow = new google.maps.InfoWindow();
+                        return function() {
+                            PTRKinfoWindow.setContent(PTRK_data_markets.data[i]['market_net'] + ' \,' + PTRK_data_markets.data[i]['market_address_ru']);
+                            PTRKinfoWindow.open(map, PTRK_marker);
+                    }
+                })(PTRK_marker, i));
+            }
+            }, "json");
+         } else {
+            for (var i = 0; i < PTRK_markers.length; i++) {
+                PTRK_markers[i].setMap(null);
+            }
+            PTRK_markers = [];
+        }
+    });
+
+    // for MGT_markers
+    $('#MGTCheckbox').change(function() {
+         if (this.checked) {
+            $.get("getMarkets/", {'NET':'MGT'}, function(data){
+                MGT_data_markets = JSON.parse(JSON.stringify(data));
+                for (i = 0; i < MGT_data_markets.data.length; i++) {
+                    MGT_marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(MGT_data_markets.data[i]['market_lat'], MGT_data_markets.data[i]['market_lng']),
+                        map: map //,
+                        //icon: {
+                        //    url: 'https://dixy.ru/local/templates/dixy/images/icon-map.png',
+                        //    scaledSize: new google.maps.Size(22, 35)
+                        //}
+                    });
+                    MGT_markers.push(MGT_marker);
+                    google.maps.event.addListener(MGT_marker, 'click', (function(MGT_marker, i) {
+                    var MGTinfoWindow = new google.maps.InfoWindow();
+                        return function() {
+                            MGTinfoWindow.setContent(MGT_data_markets.data[i]['market_net'] + ' \,' + MGT_data_markets.data[i]['market_address_ru']);
+                            MGTinfoWindow.open(map, MGT_marker);
+                    }
+                })(MGT_marker, i));
+            }
+            }, "json");
+         } else {
+            for (var i = 0; i < MGT_markers.length; i++) {
+                MGT_markers[i].setMap(null);
+            }
+            MGT_markers = [];
+        }
     });
 
     // for DKS_markers
@@ -391,26 +463,29 @@
 <div class="row"></br></div>
 
 <div id="exTab1" class="row">
+
+    {% bootstrap_messages %}
+
     <div id="massage"></div>
     <label class="checkbox-inline">
         <input type="checkbox" id="RouteCheck" value="route_type"> <span class="glyphicon glyphicon-flash"></span> Авто-определение стартовой точки маршрута
     </label>
 
-    <!-- <p><span class="glyphicon glyphicon-flash"></span> Первая выбранная в таблице точка считается первой точкой маршрута за день.</p> -->
-
     <form id="f_form">
      <table class="table" id="route_table">
       <thead class="thead-dark">
         <tr>
+          <th style="width:3%" scope="col">  </th>
+          <th style="width:3%" scope="col">  </th>
           <th scope="col">Адрес</th>
-          <th scope="col">  </th>
-          <th scope="col">Пнд?</th>
-          <th scope="col">Втр?</th>
-          <th scope="col">Срд?</th>
-          <th scope="col">Чтв?</th>
-          <th scope="col">Птн?</th>
-          <th scope="col">Сб?</th>
-          <th scope="col">Вск?</th>
+          <th style="width:3%" scope="col">  </th>
+          <th style="width:5%" scope="col">Пнд</th>
+          <th style="width:5%" scope="col">Вт</th>
+          <th style="width:5%" scope="col">Ср</th>
+          <th style="width:5%" scope="col">Чтв</th>
+          <th style="width:5%" scope="col">Птн</th>
+          <th style="width:5%" scope="col">Сб</th>
+          <th style="width:5%" scope="col">Вск</th>
         </tr>
       </thead>
       <tbody>
@@ -423,7 +498,28 @@
     <button type="button" class="btn btn-success" id="button_add">Добавить точку</button>
     <button type="button" class="btn" id="button_view">Рассчитать!</button>
     <button type="button" class="btn" id="button_xls_report">Выгрузка в .xls</button>
+    <!-- <a href="#SaveModal1" class="btn" data-toggle="modal">Сохранить</a>  <button type="button" class="btn" id="button_save_report"><a href="#SaveModal1" class="btn" data-toggle="modal">Сохранить</a></button> -->
     <div class="row"></br></div>
+
+    <div id="SaveModal1" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Сохранить сценарий..</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="save_form" class="post-form">
+                        {% bootstrap_form save_form %}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" id="button_save_route">Ок!</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -431,58 +527,83 @@
     <div class="row"></br></div>
 
 <script>
+    // Перемещение строк таблицы - вверх!
+    function MoveLineUp(element){
+                var row = $(element).parents("tr");
+                row.insertBefore(prev_elem);
+    }
+
+    // Перемещение строк таблицы - вниз!
+    function MoveLineDown(element){
+                var row = $(element).parents("tr");
+                row.insertAfter(row.next());
+    }
+
+    // Сохранение маршрута
+    $("#button_save_route").click(
+        function(){
+            $("#id_route_rawArray").val(bigArrayNorm);
+            var form_data = $("#save_form").serializeArray();
+            $.post("SaveRoute/", {'data': form_data}, function(data){
+                $('#massage').addClass("alert alert-success").append('<p>Успешно сохранено!</p>');
+            }, "json");
+        }
+    );
 
     // Добавление нового поля
     $("#button_add").click(
         function(){
-        maxItem = 25;
-        index = $(".typeahead").length;
-        if (maxItem != 0 && index >= maxItem) {
-            $('#button_add').prop('disabled', true);
-        } else {
-            $("#route_table").append("<tr><td><input type=\"text\" class=\"typeahead form-control\" data-provide=\"typeahead\"><\/td>" +
-                                    "<td><a href=\"javascript:\/\/\" onclick=\"deleteItem(this)\">х</a><\/td>" +
-                                    "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"pnd\" name=\"pnd\"><\/div><\/td>" +
-                                    "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"vtr\" name=\"vtr\"><\/div><\/td>" +
-                                    "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"srd\" name=\"srd\"><\/div><\/td>" +
-                                    "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"chtv\" name=\"chtv\"><\/div><\/td>" +
-                                    "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"ptn\" name=\"ptn\"><\/div><\/td>" +
-                                    "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"sbt\" name=\"sbt\"><\/div><\/td>" +
-                                    "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"vskr\" name=\"vskr\"><\/div><\/td><\/tr>");
-            EnableButtonView();
-            var $input = $(".typeahead.form-control");
-            $.get("getAllMarkets/", function(data){
-            $input.typeahead({source: data, minLength:1, items:10, autoSelect:true,
-                afterSelect: function (item){
-                    // Собираем адреса для поиска дублей
-                    addr_val_list = [];
-                    $(".typeahead.form-control").each(function(indx, element){
-                        addr_val_list.push($(element).val());
-                    });
-                    // Ищем дубли в выбраных точках
-                    for (addr_val of addr_val_list) {
-                        var new_addr_val_list = addr_val_list.slice();
-                        new_addr_val_list.splice(new_addr_val_list.indexOf(addr_val), 1);
-                        for (new_addr_val of new_addr_val_list) {
-                            if (addr_val == new_addr_val) {
-                                // Блокируем расчет и ругаемся
-                                $('#button_view').prop('disabled', true);
-                                $('#massage').show();
-                                $('#massage').addClass("alert alert-danger").append('<p>В таблице имеются дубликаты точек!</p>');
-                                break;
+            maxItem = 25;
+            index = $(".typeahead").length;
+            if (maxItem != 0 && index >= maxItem) {
+                $('#button_add').prop('disabled', true);
+            } else {
+                $("#route_table").append("<tr><td><a href=\"javascript:\/\/\" onclick=\"MoveLineUp(this)\"><span class=\"glyphicon glyphicon-arrow-up\"></span><\/a><\/td>" +
+                                        "<td><a href=\"javascript:\/\/\" onclick=\"MoveLineDown(this)\"><span class=\"glyphicon glyphicon-arrow-down\"></span><\/a><\/td>" +
+                                        "<td><input type=\"text\" class=\"typeahead form-control\" data-provide=\"typeahead\"><\/td>" +
+                                        "<td><a href=\"javascript:\/\/\" onclick=\"deleteItem(this)\"><span class=\"glyphicon glyphicon-remove\"></span></a><\/td>" +
+                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"pnd\" name=\"pnd\"><\/div><\/td>" +
+                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"vtr\" name=\"vtr\"><\/div><\/td>" +
+                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"srd\" name=\"srd\"><\/div><\/td>" +
+                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"chtv\" name=\"chtv\"><\/div><\/td>" +
+                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"ptn\" name=\"ptn\"><\/div><\/td>" +
+                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"sbt\" name=\"sbt\"><\/div><\/td>" +
+                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"vskr\" name=\"vskr\"><\/div><\/td><\/tr>");
+                EnableButtonView();
+                var $input = $(".typeahead.form-control");
+                $.get("getAllMarkets/", function(data){
+                $input.typeahead({source: data, minLength:1, items:10, autoSelect:true,
+                    afterSelect: function (item){
+                        // Собираем адреса для поиска дублей
+                        addr_val_list = [];
+                        $(".typeahead.form-control").each(function(indx, element){
+                            addr_val_list.push($(element).val());
+                        });
+                        // Ищем дубли в выбраных точках
+                        for (addr_val of addr_val_list) {
+                            var new_addr_val_list = addr_val_list.slice();
+                            new_addr_val_list.splice(new_addr_val_list.indexOf(addr_val), 1);
+                            for (new_addr_val of new_addr_val_list) {
+                                if (addr_val == new_addr_val) {
+                                    // Блокируем расчет и ругаемся
+                                    $('#button_view').prop('disabled', true);
+                                    $('#massage').show();
+                                    $('#massage').addClass("alert alert-danger").append('<p>В таблице имеются дубликаты точек!</p>');
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    // Блокируем ввод в инпут
-                    $('.typeahead').prop('disabled', true);
-                    // geocodeAddress(map, item);
-                    return item;
-                }
-            });
-            }, "json");
+                        // Блокируем ввод в инпут
+                        $('.typeahead').prop('disabled', true);
+                        // geocodeAddress(map, item);
+                        return item;
+                    }
+                });
+                }, "json");
+            }
         }
-    });
+    );
 
 
     // Удаляет таблицы результатов и связанные элементы

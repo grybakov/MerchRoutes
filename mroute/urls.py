@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^getAllMarkets/$', views.getAllMarkets, name='getAllMarkets'),  # ajax
+    url(r'^SaveRoute/$', views.SaveRoute, name='SaveRoute'),  # ajax
     url(r'^news/$', views.news, name='news'),
     url(r'^addmarket/$', views.addmarket, name='addmarket'),  # form non-ajax
     url(r'^getMarkets/$', views.getMarkets, name='getMarkets'),  # ajax

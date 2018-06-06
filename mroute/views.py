@@ -10,11 +10,12 @@ import googlemaps
 
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, get_object_or_404
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
+from django.urls import reverse
 
 from .models import MarketModel, RouteModel, MetroModel
-from .forms import MarketForm
+from .forms import MarketForm, SaveRouteForm
 
 
 # Google API Key
@@ -23,7 +24,9 @@ GOOGLE_API_KEY_GEOCODE = 'AIzaSyAPGRaziW2AmkRSTgfvaKB7Ddw-cgaMGUQ'
 
 
 def index(request):
-    return render(request, 'index.html')
+
+    save_form = SaveRouteForm()
+    return render(request, 'index.html', {'save_form': save_form})
 
 
 def news(request):
@@ -276,4 +279,27 @@ def WriteToExcel(rawArray):
     # base64
     xlsx_encode = base64.encodebytes(xlsx_data)
     return xlsx_encode
+
+
+@csrf_exempt
+def SaveRoute(request):
+
+    if request.method == 'POST':
+        print(request.POST.get('data'))
+        form = SaveRouteForm(request.POST.get('data'))
+        # print(str(form))
+        #route = form.save(commit=False)
+        #print(route)
+        if form.is_valid():
+            route = form.save(commit=False)
+            # route.route_status = True
+            print(route)
+            # route.save()
+            messages.success(request, 'Успешно сохранено.')
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            messages.error(request, 'Форма заполнена не верно! Заполните заново или обратитесь к Администратору.')
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        return HttpResponseRedirect(reverse('index'))
 

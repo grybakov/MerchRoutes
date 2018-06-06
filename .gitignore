@@ -3,6 +3,7 @@
 __pycache__
 pyvenv
 pyvenv.cfg
+db.sqlite3
 /Include
 /addr_market_lists
 /static

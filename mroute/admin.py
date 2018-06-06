@@ -11,8 +11,9 @@ class MarketAdmin(admin.ModelAdmin):
 
 @admin.register(RouteModel)
 class MarketAdmin(admin.ModelAdmin):
-    # list_display = ('market_net', 'market_address_ru', 'market_is_active')
-    pass
+    list_display = ('route_name', 'route_desc', 'route_status')
+    search_fields = ['route_name', 'route_desc']
+    list_filter = ['route_status']
 
 
 @admin.register(MetroModel)
