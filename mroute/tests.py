@@ -1,4 +1,7 @@
-from django.test import TestCase
+import json
+from unittest import skip
+
+from django.test import TestCase, Client
 from django.urls import reverse
 
 from .forms import MarketForm
@@ -129,15 +132,15 @@ class GetAllMarketsViewTest(TestCase):
     correct_market = 'г. Москва, Онежская Улица, д. 34'
 
     def test_url_exists_at_desired_location(self):
-        response = self.client.post('/getAllMarkets/')
+        response = self.client.get('/getAllMarkets/')
         self.assertEqual(response.status_code, 200)
 
     def test_url_accessible_by_name(self):
-        response = self.client.post(reverse('getAllMarkets'))
+        response = self.client.get(reverse('getAllMarkets'))
         self.assertEqual(response.status_code, 200)
 
     def test_success_get_all_active_markets(self):
-        response = self.client.post(reverse('getAllMarkets'))
+        response = self.client.get(reverse('getAllMarkets'))
         self.assertEqual(len(response.json()), 1038)
         self.assertTrue(self.correct_market in set(response.json()))
 
@@ -149,7 +152,7 @@ class GetAllMarketsViewTest(TestCase):
         queryset.market_is_active = False
         queryset.save()
 
-        response = self.client.post(reverse('getAllMarkets'))
+        response = self.client.get(reverse('getAllMarkets'))
         self.assertEqual(len(response.json()), 1037)
         self.assertFalse(self.correct_market in set(response.json()))
 
@@ -246,12 +249,10 @@ class MakeRouteAutoStartViewTest(TestCase):
         self.assertEqual(response.json()['day'], self.test_day['sendDay'])
 
         google_response = response.json()['data'][0]['legs']
-        # for i in google_response:
-        #     print(i['start_address'])
 
         for count_id, leg in enumerate(google_response):
-            print('{0} - {1}'.format(leg['start_address'], self.correct_test_route[count_id]))
-            # self.assertEqual(leg['start_address'], self.correct_test_route[count_id])
+            # print('{0} - {1}'.format(leg['start_address'], self.correct_test_route[count_id]))
+            self.assertEqual(leg['start_address'], self.correct_test_route[count_id])
         self.assertEqual(google_response[5]['end_address'], self.correct_test_route[6])
 
 
@@ -264,4 +265,40 @@ class MakeXlsReportViewTest(TestCase):
     def test_url_accessible_by_name(self):
         response = self.client.get(reverse('getMarkets'), {'NET': 'DKS'})
         self.assertEqual(response.status_code, 200)
+
+
+class SaveRouteViewTest(TestCase):
+
+    test_route = {"name_route": "Отличный маршрут 777",
+                  "desc_route": "Славный путь!",
+                  "rawArray": "[{\"day\": \"Понедельник\","
+                              "\"points\":[\"Ярославская область, г. Рыбинск, ул. Бабушкина, д. 29 ТЦ Виконда\","
+                              "\"Новомосковск, ул. Калинина, 22/47\","
+                              "\"М.О, г. Чехов, Симферопольское ш. д.1\"]}]"}
+
+    @skip("TODO - Don't work")
+    def test_url_exists_at_desired_location(self):
+        payload = self.test_route
+        # client = Client(CONTENT_TYPE='application/x-www-form-urlencoded; charset=UTF-8')
+        response = self.client.post('/SaveRoute/', payload)
+        self.assertEqual(response.status_code, 200)
+
+    @skip("TODO - Don't work")
+    def test_url_accessible_by_name(self):
+        response = self.client.post(reverse('SaveRoute'), self.test_route)
+        self.assertEqual(response.status_code, 200)
+
+    @skip("TODO - Don't work")
+    def test_success_save_route(self):
+        response = self.client.post(reverse('SaveRoute'), self.test_route)
+        self.assertEqual(response.status_code, 200)
+        # response
+        self.assertEqual(response['status'], 'OK')
+        # in BD
+        route = RouteModel.objects.all()
+        self.assertEqual(len(route), 1)
+        self.assertEqual(route[0].route_name, self.test_route['name_route'])
+        self.assertEqual(route[0].route_desc, self.test_route['route_desc'])
+        self.assertEqual(route[0].route_rawArray, self.test_route['rawArray'])
+        self.assertEqual(route[0].route_status, True)
 

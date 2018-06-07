@@ -368,6 +368,7 @@
 
         $('#button_view').prop('disabled', true);
         $('#button_xls_report').prop('disabled', true);
+        $('#button_save_report').addClass("disabled");
 
          // see more options here: https://developers.google.com/maps/documentation/javascript/reference#DirectionsRendererOptions
          PND_DirectionsDisplay = new google.maps.DirectionsRenderer({
@@ -463,9 +464,6 @@
 <div class="row"></br></div>
 
 <div id="exTab1" class="row">
-
-    {% bootstrap_messages %}
-
     <div id="massage"></div>
     <label class="checkbox-inline">
         <input type="checkbox" id="RouteCheck" value="route_type"> <span class="glyphicon glyphicon-flash"></span> Авто-определение стартовой точки маршрута
@@ -498,7 +496,7 @@
     <button type="button" class="btn btn-success" id="button_add">Добавить точку</button>
     <button type="button" class="btn btn-warning" id="button_view">Рассчитать!</button>
     <button type="button" class="btn btn-info" id="button_xls_report">Выгрузка в .xls</button>
-    <a href="#SaveModal1" class="btn btn-primary pull-right" data-toggle="modal">Сохранить маршрут</a>  <!-- <button type="button" class="btn" id="button_save_report"><a href="#SaveModal1" class="btn" data-toggle="modal">Сохранить</a></button> -->
+    <a href="#SaveModal1" class="btn btn-primary pull-right" data-toggle="modal" id="button_save_report">Сохранить маршрут</a>
     <div class="row"></br></div>
 
     <div id="SaveModal1" class="modal fade">
@@ -542,10 +540,12 @@
     // Сохранение маршрута
     $("#button_save_route").click(
         function(){
-            $("#id_route_rawArray").val(bigArrayNorm);
-            var form_data = $("#save_form").serializeArray();
-            $.post("SaveRoute/", {'data': form_data}, function(data){
-                $('#massage').addClass("alert alert-success").append('<p>Успешно сохранено!</p>');
+            var dataArray = {'name_route': $("#id_route_name").val(), 'desc_route': $("#id_route_desc").val(), 'rawArray': bigArrayNorm};
+            // $('#SaveModal1').modal('hide');
+            $.post("SaveRoute/", JSON.stringify(dataArray), function(data){
+                console.log('Save route!');
+                $('#massage').show();
+                $('#massage').addClass("alert alert-success").append('<p>' + data['data'] + '</p>');
             }, "json");
         }
     );
@@ -636,6 +636,7 @@
         clearElementsResult();
         EnableButtonView();
         $('#button_xls_report').prop('disabled', true);
+        $('#button_save_report').addClass("disabled");
 
         // Блокируем/разблокируем кнопочку добавления
         maxItem = 25;
@@ -853,6 +854,7 @@
                     }
                     // Разблокируем кнопу генерации отчета
                     $('#button_xls_report').prop('disabled', false);
+                    $('#button_save_report').removeClass("disabled");
                 }, "json");
         };
       });

@@ -9,6 +9,7 @@ import xlsxwriter
 import googlemaps
 
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
@@ -23,18 +24,19 @@ GOOGLE_API_KEY = 'AIzaSyA_M1UNrgnO7gOnafPEFtTwHdWozBQG5zo'
 GOOGLE_API_KEY_GEOCODE = 'AIzaSyAPGRaziW2AmkRSTgfvaKB7Ddw-cgaMGUQ'
 
 
+@require_http_methods(['GET'])
 def index(request):
-
     save_form = SaveRouteForm()
     return render(request, 'index.html', {'save_form': save_form})
 
 
+@require_http_methods(['GET'])
 def news(request):
     return render(request, 'news.html')
 
 
+@require_http_methods(['GET', 'POST'])
 def addmarket(request):
-
     if request.method == 'POST':
         form = MarketForm(request.POST)
         if form.is_valid():
@@ -59,9 +61,8 @@ def addmarket(request):
 
 
 @csrf_exempt
-# TODO require_http_methods
+@require_http_methods(['POST'])
 def marketTranslit(request):
-
     translitArray = {}
     req_dict = dict(request.POST)
     rlist = req_dict.get('data[]')
@@ -70,13 +71,12 @@ def marketTranslit(request):
         queryset = MarketModel.objects.filter(market_address_en=addr).values('market_address_ru')
         translitArray[addr] = queryset[0]['market_address_ru']
     response = {'data': translitArray, 'status': 'OK'}
-    print(response)
     return JsonResponse(response)
 
 
 # Отдает вообще все адреса точек (для выпадающего списка)
+@require_http_methods(['GET'])
 def getAllMarkets(request):
-
     queryset = MarketModel.objects.filter(market_is_active=True).values_list('market_address_ru', flat=True)
     json_list = []
     for i in queryset:
@@ -85,14 +85,16 @@ def getAllMarkets(request):
 
 
 # Отдает все точки запрошенной сети (фильтр для Google Maps).
+@require_http_methods(['GET'])
+# TODO POST
 def getMarkets(request):
-
     queryset = MarketModel.objects.filter(market_is_active=True, market_net=request.GET['NET']).values()
     response = {'data': list(queryset), 'status': 'OK'}
     return JsonResponse(response)
 
 
 # Создание маршрутов по известной начальной точке.
+@require_http_methods(['GET'])
 def makeRouteFixStart(request):
 
     min_time = sys.maxsize
@@ -133,6 +135,7 @@ def makeRouteFixStart(request):
 
 
 # Создает марщруты с автоматическим определением стартовой точки возле ближайшего метро.
+@require_http_methods(['GET'])
 def makeRouteAutoStart(request):
 
     MAX_METRO_R = 0.7  # Км
@@ -232,18 +235,17 @@ def makeRouteAutoStart(request):
     return JsonResponse(response)
 
 
-@csrf_exempt
 # Выгрузка рассчитанного маршрута в xls (на вход приходит bigArrayNorm)
+@csrf_exempt
+@require_http_methods(['POST'])
 def makeXlsReport(request):
-
-    if request.method == 'POST':
-        rawArray = json.loads(request.body)
-        # Формируем ответ
-        response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="Routes.xlsx"'
-        xlsx_data = WriteToExcel(rawArray)
-        response.write(xlsx_data)
-        return response
+    rawArray = json.loads(request.body)
+    # Формируем ответ
+    response = HttpResponse(content_type='application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="Routes.xlsx"'
+    xlsx_data = WriteToExcel(rawArray)
+    response.write(xlsx_data)
+    return response
 
 
 def WriteToExcel(rawArray):
@@ -281,24 +283,21 @@ def WriteToExcel(rawArray):
     return xlsx_encode
 
 
+# Сохранение маршрута
 @csrf_exempt
+@require_http_methods(['POST'])
 def SaveRoute(request):
-
-    if request.method == 'POST':
-        # print(request.POST.get('data'))
-        form = SaveRouteForm(request.POST.get('data'))
-        route = form.save(commit=False)
-        print(route)
-        if form.is_valid():
-            route = form.save(commit=False)
-            # route.route_status = True
-            print(route)
-            # route.save()
-            messages.success(request, 'Успешно сохранено.')
-            return HttpResponseRedirect(reverse('index'))
-        else:
-            messages.error(request, 'Форма заполнена не верно! Заполните заново или обратитесь к Администратору.')
-            return HttpResponseRedirect(reverse('index'))
-    else:
-        return HttpResponseRedirect(reverse('index'))
+    rawArray = json.loads(request.body)
+    route = RouteModel()
+    try:
+        route.route_name = rawArray['name_route']
+        route.route_desc = rawArray['desc_route']
+        route.route_rawArray = rawArray['rawArray']
+        route.route_status = True
+        route.save()
+    except Exception:
+        response = {'data': 'При сохранении произошла неведомая ошибка.', 'status': 'Fail'}
+        return JsonResponse(response)
+    response = {'data': 'Успешно сохранено!', 'status': 'OK'}
+    return JsonResponse(response)
 

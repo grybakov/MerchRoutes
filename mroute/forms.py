@@ -12,8 +12,5 @@ class MarketForm(forms.ModelForm):
 class SaveRouteForm(forms.ModelForm):
     class Meta:
         model = RouteModel
-        fields = ('route_name', 'route_desc', 'route_rawArray',)
-        widgets = {
-            'route_rawArray': forms.HiddenInput()
-        }
+        fields = ('route_name', 'route_desc',)
 
