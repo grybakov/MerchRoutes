@@ -496,9 +496,9 @@
     <div class="row"></br></div>
 
     <button type="button" class="btn btn-success" id="button_add">Добавить точку</button>
-    <button type="button" class="btn" id="button_view">Рассчитать!</button>
-    <button type="button" class="btn" id="button_xls_report">Выгрузка в .xls</button>
-    <!-- <a href="#SaveModal1" class="btn" data-toggle="modal">Сохранить</a>  <button type="button" class="btn" id="button_save_report"><a href="#SaveModal1" class="btn" data-toggle="modal">Сохранить</a></button> -->
+    <button type="button" class="btn btn-warning" id="button_view">Рассчитать!</button>
+    <button type="button" class="btn btn-info" id="button_xls_report">Выгрузка в .xls</button>
+    <a href="#SaveModal1" class="btn btn-primary pull-right" data-toggle="modal">Сохранить маршрут</a>  <!-- <button type="button" class="btn" id="button_save_report"><a href="#SaveModal1" class="btn" data-toggle="modal">Сохранить</a></button> -->
     <div class="row"></br></div>
 
     <div id="SaveModal1" class="modal fade">
@@ -529,14 +529,14 @@
 <script>
     // Перемещение строк таблицы - вверх!
     function MoveLineUp(element){
-                var row = $(element).parents("tr");
-                row.insertBefore(prev_elem);
+        var row = $(element).parents("tr");
+        row.insertBefore(row.prev());
     }
 
     // Перемещение строк таблицы - вниз!
     function MoveLineDown(element){
-                var row = $(element).parents("tr");
-                row.insertAfter(row.next());
+        var row = $(element).parents("tr");
+        row.insertAfter(row.next());
     }
 
     // Сохранение маршрута

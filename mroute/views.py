@@ -285,11 +285,10 @@ def WriteToExcel(rawArray):
 def SaveRoute(request):
 
     if request.method == 'POST':
-        print(request.POST.get('data'))
+        # print(request.POST.get('data'))
         form = SaveRouteForm(request.POST.get('data'))
-        # print(str(form))
-        #route = form.save(commit=False)
-        #print(route)
+        route = form.save(commit=False)
+        print(route)
         if form.is_valid():
             route = form.save(commit=False)
             # route.route_status = True
