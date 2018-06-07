@@ -540,8 +540,8 @@
     // Сохранение маршрута
     $("#button_save_route").click(
         function(){
-            var dataArray = {'name_route': $("#id_route_name").val(), 'desc_route': $("#id_route_desc").val(), 'rawArray': bigArrayNorm};
-            // $('#SaveModal1').modal('hide');
+            var dataArray = {'name_route': $("#id_route_name").val(), 'desc_route': $("#id_route_desc").val(), 'rawArray': JSON.parse(JSON.stringify(bigArrayNorm))};
+            $('#SaveModal1').modal('hide');
             $.post("SaveRoute/", JSON.stringify(dataArray), function(data){
                 console.log('Save route!');
                 $('#massage').show();
