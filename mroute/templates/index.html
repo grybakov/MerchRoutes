@@ -15,6 +15,7 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <link href="{% static "css/jquery.loading.css" %}" rel="stylesheet">
 
     <style>
         .selector-for-some-widget {
@@ -27,6 +28,7 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src=" {% static "js/jquery.loading.js" %}"></script>
 <script src=" {% static "js/bootstrap.min.js" %}"></script>
 <script src=" {% static "js/bootstrap3-typeahead.min.js" %}"></script>
 
@@ -769,6 +771,8 @@
                 }
             }
 
+            // Show loader
+            $('body').loading({message:'Подождите, пожалуйста, немного..'});
 
             // Формируем запрос к бекенду на расчет в зависимости от выбранного режима
             if ($('#RouteCheck').is(':checked')) {
@@ -778,6 +782,7 @@
                     $.get("makeRouteAutoStart/", {'sendDay': day['day'], 'pointsArray': day['points']}, function(data){
                         // Вернулся статус Fail
                         if (data['status'] == 'Fail'){
+                            $('body').loading('stop');
                             $('#massage').addClass("alert alert-danger").append('<p>'+ data['error_massage'] +'</p>');
                             return false
                         }
@@ -856,6 +861,9 @@
                     $('#button_xls_report').prop('disabled', false);
                     $('#button_save_report').removeClass("disabled");
                 }, "json");
+
+            // Hide loader
+            $('body').loading('stop');
         };
       });
 
@@ -942,7 +950,7 @@
     // Отправляем запрос на формирование XLS
     $("#button_xls_report").click(
         function() {
-            $.ajax({type: 'POST', contentType: "application/json", url: 'makeXlsReport/', data : JSON.stringify(bigArrayNorm), success: function(data) {
+            $.ajax({type: 'POST', contentType: "application/json", url: 'makeXlsReport/', data : JSON.stringify(JSON.parse(JSON.stringify(bigArrayNorm))), success: function(data) {
                 console.log('loading complete..');
                 window.open('data:application/vnd.ms-excel;base64,'+data, '_blank');
             }
