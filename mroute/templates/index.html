@@ -102,7 +102,7 @@
         initMap();
     });
 
-    // for MGT_markers
+    // for PTRK_markers
     $('#PTRKCheckbox').change(function() {
          if (this.checked) {
             $.get("getMarkets/", {'NET':'PTRK'}, function(data){
@@ -110,11 +110,11 @@
                 for (i = 0; i < PTRK_data_markets.data.length; i++) {
                     PTRK_marker = new google.maps.Marker({
                         position: new google.maps.LatLng(PTRK_data_markets.data[i]['market_lat'], PTRK_data_markets.data[i]['market_lng']),
-                        map: map //,
-                        //icon: {
-                        //    url: 'https://dixy.ru/local/templates/dixy/images/icon-map.png',
-                        //    scaledSize: new google.maps.Size(22, 35)
-                        //}
+                        map: map,
+                        icon: {
+                            url: 'https://5ka.ru/static/web/img/ico-pinmap-active.png',
+                            scaledSize: new google.maps.Size(20, 30)
+                        }
                     });
                     PTRK_markers.push(PTRK_marker);
                     google.maps.event.addListener(PTRK_marker, 'click', (function(PTRK_marker, i) {
@@ -142,11 +142,11 @@
                 for (i = 0; i < MGT_data_markets.data.length; i++) {
                     MGT_marker = new google.maps.Marker({
                         position: new google.maps.LatLng(MGT_data_markets.data[i]['market_lat'], MGT_data_markets.data[i]['market_lng']),
-                        map: map //,
-                        //icon: {
-                        //    url: 'https://dixy.ru/local/templates/dixy/images/icon-map.png',
-                        //    scaledSize: new google.maps.Size(22, 35)
-                        //}
+                        map: map,
+                        icon: {
+                            url: 'http://magnit-info.ru/bitrix/templates/magnit_new_d/img/general/pin-hyper.png',
+                            scaledSize: new google.maps.Size(24, 34)
+                        }
                     });
                     MGT_markers.push(MGT_marker);
                     google.maps.event.addListener(MGT_marker, 'click', (function(MGT_marker, i) {
