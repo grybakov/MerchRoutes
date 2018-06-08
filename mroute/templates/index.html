@@ -31,6 +31,7 @@
 <script src=" {% static "js/jquery.loading.js" %}"></script>
 <script src=" {% static "js/bootstrap.min.js" %}"></script>
 <script src=" {% static "js/bootstrap3-typeahead.min.js" %}"></script>
+<script src=" {% static "js/circular-json.js" %}"></script>
 
 <div class="navbar navbar-default navbar-static-top" role="navigation">
 <div class="container">
@@ -542,9 +543,9 @@
     // Сохранение маршрута
     $("#button_save_route").click(
         function(){
-            var dataArray = {'name_route': $("#id_route_name").val(), 'desc_route': $("#id_route_desc").val(), 'rawArray': JSON.parse(JSON.stringify(bigArrayNorm))};
+            var dataArray = {'name_route': $("#id_route_name").val(), 'desc_route': $("#id_route_desc").val(), 'rawArray': bigArrayNorm};
             $('#SaveModal1').modal('hide');
-            $.post("SaveRoute/", JSON.stringify(dataArray), function(data){
+            $.post("SaveRoute/", CircularJSON.stringify(dataArray), function(data){
                 console.log('Save route!');
                 $('#massage').show();
                 $('#massage').addClass("alert alert-success").append('<p>' + data['data'] + '</p>');
@@ -742,13 +743,14 @@
                 i++;
             }
 
-            // Убираем дни где не выбрано не одного чекбокса
+            // Убираем дни где не выбрано не одного чекбокса. Уничтожаем bigArray.
             bigArrayNorm = [];
             for (d of bigArray){
               if (d['points'].length != 0){
                 bigArrayNorm.push(d);
               }
             }
+            delete bigArray;
 
             // Проверка на менее 3 точек в маршруте
             for (dd of bigArrayNorm){
@@ -901,7 +903,6 @@
                 it.DirectRenderObj.setMap(map);
                 if (it['render_result'] == ''){
                     // Еще не получали DirectionsRenderer -> будем получать
-
                     best_route = it['calc_result']
                     var start_point = it['translitDict'][best_route['legs'][0]['start_address']];
                     var finish_point = it['translitDict'][best_route['legs'][(best_route['legs'].length - 1)]['end_address']];
@@ -950,18 +951,12 @@
     // Отправляем запрос на формирование XLS
     $("#button_xls_report").click(
         function() {
-            $.ajax({type: 'POST', contentType: "application/json", url: 'makeXlsReport/', data : JSON.stringify(JSON.parse(JSON.stringify(bigArrayNorm))), success: function(data) {
+            $.ajax({type: 'POST', contentType: "application/json", url: 'makeXlsReport/', data : CircularJSON.stringify(bigArrayNorm), success: function(data) {
                 console.log('loading complete..');
                 window.open('data:application/vnd.ms-excel;base64,'+data, '_blank');
             }
         });
     });
-
-</script>
-
-<script>
-// --- С авто определением начальной точки! ---
-
 
 </script>
 
