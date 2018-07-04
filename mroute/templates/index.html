@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="rybakovgeorg@gmail.com">
-    <link rel="icon" href="https://getbootstrap.com/docs/3.3/favicon.ico">
+    <!-- <link rel="icon" href="https://getbootstrap.com/docs/3.3/favicon.ico"> -->
 
     <title>MerchRoutes Dashboard</title>
 
@@ -25,946 +25,451 @@
 </head>
 <body>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src=" {% static "js/jquery.loading.js" %}"></script>
-<script src=" {% static "js/bootstrap.min.js" %}"></script>
-<script src=" {% static "js/bootstrap3-typeahead.min.js" %}"></script>
-<script src=" {% static "js/circular-json.js" %}"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src=" {% static "js/jquery.loading.js" %}"></script>
+    <script src=" {% static "js/bootstrap.min.js" %}"></script>
+    <script src=" {% static "js/bootstrap3-typeahead.min.js" %}"></script>
+    <script src=" {% static "js/circular-json.js" %}"></script>
 
-<div class="navbar navbar-default navbar-static-top" role="navigation">
-<div class="container">
-<div class="navbar-header">
-  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-    <span class="sr-only">Toggle navigation</span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-  </button>
-<a class="navbar-brand" href="/">MerchRoutes</a>
-</div>
-<div class="navbar-collapse collapse">
-  <ul class="nav navbar-nav">
-    <li class="active"><a href="/">Проект</a></li>
-    <li><a href="/addmarket/">Добавить</a></li>
-</ul>
-<ul class="nav navbar-nav navbar-right">
-    <!-- <li><a href="../navbar/">Default</a></li>
-    <li class="active"><a href="./">Static top</a></li> -->
-    <li><a href="/news/">Новое!</a></li>
-</ul>
-</div>
-</div>
-</div>
+    <script src=" {% static "js/app/routeModule.js" %}"></script>
+    <script src=" {% static "js/app/tableModule.js" %}"></script>
+    <script src=" {% static "js/app/initMap.js" %}"></script>
+    <script src=" {% static "js/app/main.js" %}"></script>
+
+    <div class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">MerchRoutes</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Проект</a></li>
+                <li><a href="/addmarket/">Добавить</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                <li><a href="/news/">Новое!</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
 
-<div class="container">
-<h2>Проектирование маршрута</h2>
+    <div class="container">
+    <h2>Проектирование маршрута</h2>
 
-    <div class="row"></div>
-    <label class="checkbox-inline">
-        <input type="checkbox" id="DKSCheckbox" value="option1"> Дикси
-    </label>
-    <label class="checkbox-inline">
-        <input type="checkbox" id="PRKRSCheckbox" value="option2"> Перекресток
-    </label>
-    <label class="checkbox-inline">
-        <input type="checkbox" id="VKTRCheckbox" value="option3"> Виктория
-    </label>
-    <label class="checkbox-inline">
-        <input type="checkbox" id="BLLCheckbox" value="option4"> BILLA
-    </label>
-    <label class="checkbox-inline">
-        <input type="checkbox" id="KRSCheckbox" value="option5"> Карусель
-    </label>
-    <label class="checkbox-inline">
-        <input type="checkbox" id="HZCheckbox" value="option6"> ТД "Холдинг-Центр"
-    </label>
-    <label class="checkbox-inline">
-        <input type="checkbox" id="MGTCheckbox" value="option7"> Магнит
-    </label>
-    <label class="checkbox-inline">
-        <input type="checkbox" id="PTRKCheckbox" value="option7"> Пятерочка
-    </label>
-    <div class="row"></br></div>
+        <div class="row"></div>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="DKSCheckbox" value="option1"> Дикси
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="PRKRSCheckbox" value="option2"> Перекресток
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="VKTRCheckbox" value="option3"> Виктория
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="BLLCheckbox" value="option4"> BILLA
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="KRSCheckbox" value="option5"> Карусель
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="HZCheckbox" value="option6"> ТД "Холдинг-Центр"
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="MGTCheckbox" value="option7"> Магнит
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="PTRKCheckbox" value="option7"> Пятерочка
+        </label>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="LNTCheckbox" value="option9"> Лента
+        </label>
+        <div class="row"></br></div>
 
-<script>
-
-    var KRS_markers = [];
-    var PRKRS_markers = [];
-    var VKTR_markers = [];
-    var BLL_markers = [];
-    var DKS_markers = [];
-    var HZ_markers = [];
-    var MGT_markers = [];
-    var PTRK_markers = [];
-
-    $(window).load(function(){
-        var map;
-        initMap();
-    });
-
-    // for PTRK_markers
-    $('#PTRKCheckbox').change(function() {
-         if (this.checked) {
-            $.get("getMarkets/", {'NET':'PTRK'}, function(data){
-                PTRK_data_markets = JSON.parse(JSON.stringify(data));
-                for (i = 0; i < PTRK_data_markets.data.length; i++) {
-                    PTRK_marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(PTRK_data_markets.data[i]['market_lat'], PTRK_data_markets.data[i]['market_lng']),
-                        map: map,
-                        icon: {
-                            url: 'https://5ka.ru/static/web/img/ico-pinmap-active.png',
-                            scaledSize: new google.maps.Size(20, 30)
-                        }
-                    });
-                    PTRK_markers.push(PTRK_marker);
-                    google.maps.event.addListener(PTRK_marker, 'click', (function(PTRK_marker, i) {
-                    var PTRKinfoWindow = new google.maps.InfoWindow();
-                        return function() {
-                            PTRKinfoWindow.setContent(PTRK_data_markets.data[i]['market_net'] + ' \,' + PTRK_data_markets.data[i]['market_address_ru']);
-                            PTRKinfoWindow.open(map, PTRK_marker);
-                    }
-                })(PTRK_marker, i));
-            }
-            }, "json");
-         } else {
-            for (var i = 0; i < PTRK_markers.length; i++) {
-                PTRK_markers[i].setMap(null);
-            }
-            PTRK_markers = [];
-        }
-    });
-
-    // for MGT_markers
-    $('#MGTCheckbox').change(function() {
-         if (this.checked) {
-            $.get("getMarkets/", {'NET':'MGT'}, function(data){
-                MGT_data_markets = JSON.parse(JSON.stringify(data));
-                for (i = 0; i < MGT_data_markets.data.length; i++) {
-                    MGT_marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(MGT_data_markets.data[i]['market_lat'], MGT_data_markets.data[i]['market_lng']),
-                        map: map,
-                        icon: {
-                            url: 'http://magnit-info.ru/bitrix/templates/magnit_new_d/img/general/pin-hyper.png',
-                            scaledSize: new google.maps.Size(24, 34)
-                        }
-                    });
-                    MGT_markers.push(MGT_marker);
-                    google.maps.event.addListener(MGT_marker, 'click', (function(MGT_marker, i) {
-                    var MGTinfoWindow = new google.maps.InfoWindow();
-                        return function() {
-                            MGTinfoWindow.setContent(MGT_data_markets.data[i]['market_net'] + ' \,' + MGT_data_markets.data[i]['market_address_ru']);
-                            MGTinfoWindow.open(map, MGT_marker);
-                    }
-                })(MGT_marker, i));
-            }
-            }, "json");
-         } else {
-            for (var i = 0; i < MGT_markers.length; i++) {
-                MGT_markers[i].setMap(null);
-            }
-            MGT_markers = [];
-        }
-    });
-
-    // for DKS_markers
-    $('#DKSCheckbox').change(function() {
-         if (this.checked) {
-            $.get("getMarkets/", {'NET':'DKS'}, function(data){
-                DKS_data_markets = JSON.parse(JSON.stringify(data));
-                for (i = 0; i < DKS_data_markets.data.length; i++) {
-                    DKS_marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(DKS_data_markets.data[i]['market_lat'], DKS_data_markets.data[i]['market_lng']),
-                        map: map,
-                        icon: {
-                            url: 'https://dixy.ru/local/templates/dixy/images/icon-map.png',
-                            scaledSize: new google.maps.Size(22, 35)
-                        }
-                    });
-                    DKS_markers.push(DKS_marker);
-                    google.maps.event.addListener(DKS_marker, 'click', (function(DKS_marker, i) {
-                    var DKSinfoWindow = new google.maps.InfoWindow();
-                        return function() {
-                            DKSinfoWindow.setContent(DKS_data_markets.data[i]['market_net'] + ' \,' + DKS_data_markets.data[i]['market_address_ru']);
-                            DKSinfoWindow.open(map, DKS_marker);
-                    }
-                })(DKS_marker, i));
-            }
-            }, "json");
-         } else {
-            for (var i = 0; i < DKS_markers.length; i++) {
-                DKS_markers[i].setMap(null);
-            }
-            DKS_markers = [];
-        }
-    });
-
-    // for BLL_markers
-    $('#BLLCheckbox').change(function() {
-         if (this.checked) {
-            $.get("getMarkets/", {'NET':'BLL'}, function(data){
-                BLL_data_markets = JSON.parse(JSON.stringify(data));
-                for (i = 0; i < BLL_data_markets.data.length; i++) {
-                    BLL_marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(BLL_data_markets.data[i]['market_lat'], BLL_data_markets.data[i]['market_lng']),
-                        map: map,
-                        icon: {
-                           url: 'http://www.billa.ru/WNBinaryWeb/108/764.png',
-                           scaledSize: new google.maps.Size(28, 22)
-                        }
-                    });
-                    BLL_markers.push(BLL_marker);
-                    google.maps.event.addListener(BLL_marker, 'click', (function(BLL_marker, i) {
-                    var BLLinfoWindow = new google.maps.InfoWindow();
-                        return function() {
-                            BLLinfoWindow.setContent(BLL_data_markets.data[i]['market_net'] + ' \,' + BLL_data_markets.data[i]['market_address_ru']);
-                            BLLinfoWindow.open(map, BLL_marker);
-                    }
-                })(BLL_marker, i));
-            }
-            }, "json");
-         } else {
-            for (var i = 0; i < BLL_markers.length; i++) {
-                BLL_markers[i].setMap(null);
-            }
-            BLL_markers = [];
-        }
-    });
-
-    // for VKTR_markers
-    $('#VKTRCheckbox').change(function() {
-         if (this.checked) {
-            $.get("getMarkets/", {'NET':'VKTR'}, function(data){
-                VKTR_data_markets = JSON.parse(JSON.stringify(data));
-                for (i = 0; i < VKTR_data_markets.data.length; i++) {
-                    VKTR_marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(VKTR_data_markets.data[i]['market_lat'], VKTR_data_markets.data[i]['market_lng']),
-                        map: map,
-                        icon: {
-                           url: 'https://www.victoria-group.ru/upload/iblock/3f9/3f975f6737c0a952a964c6d359326ce4.png',
-                           scaledSize: new google.maps.Size(28, 26)
-                        }
-                    });
-                    VKTR_markers.push(VKTR_marker);
-                    google.maps.event.addListener(VKTR_marker, 'click', (function(VKTR_marker, i) {
-                    var VKTRinfoWindow = new google.maps.InfoWindow();
-                        return function() {
-                            VKTRinfoWindow.setContent(VKTR_data_markets.data[i]['market_net'] + ' \,' + VKTR_data_markets.data[i]['market_address_ru']);
-                            VKTRinfoWindow.open(map, VKTR_marker);
-                    }
-                })(VKTR_marker, i));
-            }
-            }, "json");
-         } else {
-            for (var i = 0; i < VKTR_markers.length; i++) {
-                VKTR_markers[i].setMap(null);
-            }
-            VKTR_markers = [];
-        }
-    });
-
-    // for PRKRS_markers
-    $('#PRKRSCheckbox').change(function() {
-         if (this.checked) {
-            $.get("getMarkets/", {'NET':'PRKRS'}, function(data){
-                PRKRS_data_markets = JSON.parse(JSON.stringify(data));
-                for (i = 0; i < PRKRS_data_markets.data.length; i++) {
-                    PRKRS_marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(PRKRS_data_markets.data[i]['market_lat'], PRKRS_data_markets.data[i]['market_lng']),
-                        map: map,
-                        icon: {
-                            url: 'https://www.perekrestok.ru/build/img/mapMarkerLarge@2x.png',
-                            scaledSize: new google.maps.Size(30, 38)
-                        }
-                    });
-                    PRKRS_markers.push(PRKRS_marker);
-                    google.maps.event.addListener(PRKRS_marker, 'click', (function(PRKRS_marker, i) {
-                    var PRKRSinfoWindow = new google.maps.InfoWindow();
-                        return function() {
-                            PRKRSinfoWindow.setContent(PRKRS_data_markets.data[i]['market_net'] + ' \,' + PRKRS_data_markets.data[i]['market_address_ru']);
-                            PRKRSinfoWindow.open(map, PRKRS_marker);
-                    }
-                })(PRKRS_marker, i));
-            }
-            }, "json");
-         } else {
-            for (var i = 0; i < PRKRS_markers.length; i++) {
-                PRKRS_markers[i].setMap(null);
-            }
-            PRKRS_markers = [];
-        }
-    });
-
-    // for KRS markets
-    $('#KRSCheckbox').change(function() {
-         if (this.checked) {
-            $.get("getMarkets/", {'NET':'KRS'}, function(data){
-                KRS_data_markets = JSON.parse(JSON.stringify(data));
-                for (i = 0; i < KRS_data_markets.data.length; i++) {
-                    KRS_marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(KRS_data_markets.data[i]['market_lat'], KRS_data_markets.data[i]['market_lng']),
-                        map: map,
-                        icon: {
-                            url: 'https://karusel.ru/mapmarker.png',
-                            scaledSize: new google.maps.Size(20, 26)
-                        }
-                    });
-                    KRS_markers.push(KRS_marker);
-                    google.maps.event.addListener(KRS_marker, 'click', (function(KRS_marker, i) {
-                    var infoWindow = new google.maps.InfoWindow();
-                        return function() {
-                            infoWindow.setContent(KRS_data_markets.data[i]['market_net'] + ' \,' + KRS_data_markets.data[i]['market_address_ru']);
-                            infoWindow.open(map, KRS_marker);
-                    }
-                })(KRS_marker, i));
-            }
-            }, "json");
-         } else {
-            for (var i = 0; i < KRS_markers.length; i++) {
-                KRS_markers[i].setMap(null);
-            }
-            KRS_markers = [];
-        }
-    });
-
-    // for HZ markets
-    $('#HZCheckbox').change(function() {
-         if (this.checked) {
-            $.get("getMarkets/", {'NET':'HZ'}, function(data){
-                HZ_data_markets = JSON.parse(JSON.stringify(data));
-                for (i = 0; i < HZ_data_markets.data.length; i++) {
-                    HZ_marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(HZ_data_markets.data[i]['market_lat'], HZ_data_markets.data[i]['market_lng']),
-                        map: map //,
-                        // icon: {
-                         //  url: 'http://karusel.ru/img/pin.png' //,
-                        //    scaledSize: new google.maps.Size(34, 38)
-                        // }
-                    });
-                    HZ_markers.push(HZ_marker);
-                    google.maps.event.addListener(HZ_marker, 'click', (function(HZ_marker, i) {
-                    var infoWindow = new google.maps.InfoWindow();
-                        return function() {
-                            infoWindow.setContent(HZ_data_markets.data[i]['market_net'] + ' \,' + HZ_data_markets.data[i]['market_address_ru']);
-                            infoWindow.open(map, HZ_marker);
-                    }
-                })(HZ_marker, i));
-            }
-            }, "json");
-         } else {
-            for (var i = 0; i < HZ_markers.length; i++) {
-                HZ_markers[i].setMap(null);
-            }
-            HZ_markers = [];
-        }
-    });
-
-</script>
-
-<div class="row">
-    <!-- // Фикс бага с картой -->
-    <div id="map" style="width: 100%; height: 600px"></div>
     <script>
-      function initMap() {
 
-        $('#button_view').prop('disabled', true);
-        $('#button_xls_report').prop('disabled', true);
-        $('#button_save_report').addClass("disabled");
+        var KRS_markers = [];
+        var PRKRS_markers = [];
+        var VKTR_markers = [];
+        var BLL_markers = [];
+        var DKS_markers = [];
+        var HZ_markers = [];
+        var MGT_markers = [];
+        var PTRK_markers = [];
+        var LNT_markers = [];
 
-         // see more options here: https://developers.google.com/maps/documentation/javascript/reference#DirectionsRendererOptions
-         PND_DirectionsDisplay = new google.maps.DirectionsRenderer({
-            polylineOptions: {
-                strokeColor: '#98FB98',
-                strokeWeight: 5,
-                strokeOpacity: 0.85
+        // for LNT_markers
+        $('#LNTCheckbox').change(function() {
+             if (this.checked) {
+                $.get("getMarkets/", {'NET':'LNT'}, function(data){
+                    LNT_data_markets = JSON.parse(JSON.stringify(data));
+                    for (i = 0; i < LNT_data_markets.data.length; i++) {
+                        LNT_marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(LNT_data_markets.data[i]['market_lat'], LNT_data_markets.data[i]['market_lng']),
+                            map: map //,
+                            // icon: {
+                                // url: 'https://5ka.ru/static/web/img/ico-pinmap-active.png',
+                                // scaledSize: new google.maps.Size(20, 30)
+                            // }
+                        });
+                        LNT_markers.push(LNT_marker);
+                        google.maps.event.addListener(LNT_marker, 'click', (function(LNT_marker, i) {
+                        var LNTinfoWindow = new google.maps.InfoWindow();
+                            return function() {
+                                LNTinfoWindow.setContent(LNT_data_markets.data[i]['market_net'] + ' \,' + LNT_data_markets.data[i]['market_address_ru']);
+                                LNTinfoWindow.open(map, LNT_marker);
+                        }
+                    })(LNT_marker, i));
+                }
+                }, "json");
+             } else {
+                for (var i = 0; i < LNT_markers.length; i++) {
+                    LNT_markers[i].setMap(null);
+                }
+                LNT_markers = [];
             }
-            // markerOptions: {
-                // Задел на будущее
-            // }
-        });
-         VTR_DirectionsDisplay = new google.maps.DirectionsRenderer({
-            polylineOptions: {
-                strokeColor: '#87CEEB',
-                strokeWeight: 5,
-                strokeOpacity: 0.85
-            }
-            // markerOptions: {
-                // Задел на будущее
-            // }
-        });
-         SRD_DirectionsDisplay = new google.maps.DirectionsRenderer({
-            polylineOptions: {
-                strokeColor: '#DDA0DD',
-                strokeWeight: 5,
-                strokeOpacity: 0.85
-            }
-            // markerOptions: {
-                // Задел на будущее
-            // }
-        });
-         CHTVR_DirectionsDisplay = new google.maps.DirectionsRenderer({
-            polylineOptions: {
-                strokeColor: '#FFC0CB',
-                strokeWeight: 5,
-                strokeOpacity: 0.85
-            }
-            // markerOptions: {
-                // Задел на будущее
-            // }
-        });
-         PTN_DirectionsDisplay = new google.maps.DirectionsRenderer({
-            polylineOptions: {
-                strokeColor: '#4682B4',
-                strokeWeight: 5,
-                strokeOpacity: 0.85
-            }
-            // markerOptions: {
-                // Задел на будущее
-            // }
-        });
-         SB_DirectionsDisplay = new google.maps.DirectionsRenderer({
-            polylineOptions: {
-                strokeColor: '#00CED1',
-                strokeWeight: 5,
-                strokeOpacity: 0.85
-            }
-            // markerOptions: {
-                // Задел на будущее
-            // }
-        });
-         VSR_DirectionsDisplay = new google.maps.DirectionsRenderer({
-            polylineOptions: {
-                strokeColor: '#F0E68C',
-                strokeWeight: 5,
-                strokeOpacity: 0.85
-            }
-            // markerOptions: {
-                // Задел на будущее
-            // }
         });
 
-         DirectRenderArray = [PND_DirectionsDisplay,
-                              VTR_DirectionsDisplay,
-                              SRD_DirectionsDisplay,
-                              CHTVR_DirectionsDisplay,
-                              PTN_DirectionsDisplay,
-                              SB_DirectionsDisplay,
-                              VSR_DirectionsDisplay];
-
-        map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 10,
-          center: {lat: 55.740911, lng: 37.654136},
+        // for PTRK_markers
+        $('#PTRKCheckbox').change(function() {
+             if (this.checked) {
+                $.get("getMarkets/", {'NET':'PTRK'}, function(data){
+                    PTRK_data_markets = JSON.parse(JSON.stringify(data));
+                    for (i = 0; i < PTRK_data_markets.data.length; i++) {
+                        PTRK_marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(PTRK_data_markets.data[i]['market_lat'], PTRK_data_markets.data[i]['market_lng']),
+                            map: map,
+                            icon: {
+                                url: 'https://5ka.ru/static/web/img/ico-pinmap-active.png',
+                                scaledSize: new google.maps.Size(20, 30)
+                            }
+                        });
+                        PTRK_markers.push(PTRK_marker);
+                        google.maps.event.addListener(PTRK_marker, 'click', (function(PTRK_marker, i) {
+                        var PTRKinfoWindow = new google.maps.InfoWindow();
+                            return function() {
+                                PTRKinfoWindow.setContent(PTRK_data_markets.data[i]['market_net'] + ' \,' + PTRK_data_markets.data[i]['market_address_ru']);
+                                PTRKinfoWindow.open(map, PTRK_marker);
+                        }
+                    })(PTRK_marker, i));
+                }
+                }, "json");
+             } else {
+                for (var i = 0; i < PTRK_markers.length; i++) {
+                    PTRK_markers[i].setMap(null);
+                }
+                PTRK_markers = [];
+            }
         });
-      }
+
+        // for MGT_markers
+        $('#MGTCheckbox').change(function() {
+             if (this.checked) {
+                $.get("getMarkets/", {'NET':'MGT'}, function(data){
+                    MGT_data_markets = JSON.parse(JSON.stringify(data));
+                    for (i = 0; i < MGT_data_markets.data.length; i++) {
+                        MGT_marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(MGT_data_markets.data[i]['market_lat'], MGT_data_markets.data[i]['market_lng']),
+                            map: map,
+                            icon: {
+                                url: 'http://magnit-info.ru/bitrix/templates/magnit_new_d/img/general/pin-hyper.png',
+                                scaledSize: new google.maps.Size(24, 34)
+                            }
+                        });
+                        MGT_markers.push(MGT_marker);
+                        google.maps.event.addListener(MGT_marker, 'click', (function(MGT_marker, i) {
+                        var MGTinfoWindow = new google.maps.InfoWindow();
+                            return function() {
+                                MGTinfoWindow.setContent(MGT_data_markets.data[i]['market_net'] + ' \,' + MGT_data_markets.data[i]['market_address_ru']);
+                                MGTinfoWindow.open(map, MGT_marker);
+                        }
+                    })(MGT_marker, i));
+                }
+                }, "json");
+             } else {
+                for (var i = 0; i < MGT_markers.length; i++) {
+                    MGT_markers[i].setMap(null);
+                }
+                MGT_markers = [];
+            }
+        });
+
+        // for DKS_markers
+        $('#DKSCheckbox').change(function() {
+             if (this.checked) {
+                $.get("getMarkets/", {'NET':'DKS'}, function(data){
+                    DKS_data_markets = JSON.parse(JSON.stringify(data));
+                    for (i = 0; i < DKS_data_markets.data.length; i++) {
+                        DKS_marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(DKS_data_markets.data[i]['market_lat'], DKS_data_markets.data[i]['market_lng']),
+                            map: map,
+                            icon: {
+                                url: 'https://dixy.ru/local/templates/dixy/images/icon-map.png',
+                                scaledSize: new google.maps.Size(22, 35)
+                            }
+                        });
+                        DKS_markers.push(DKS_marker);
+                        google.maps.event.addListener(DKS_marker, 'click', (function(DKS_marker, i) {
+                        var DKSinfoWindow = new google.maps.InfoWindow();
+                            return function() {
+                                DKSinfoWindow.setContent(DKS_data_markets.data[i]['market_net'] + ' \,' + DKS_data_markets.data[i]['market_address_ru']);
+                                DKSinfoWindow.open(map, DKS_marker);
+                        }
+                    })(DKS_marker, i));
+                }
+                }, "json");
+             } else {
+                for (var i = 0; i < DKS_markers.length; i++) {
+                    DKS_markers[i].setMap(null);
+                }
+                DKS_markers = [];
+            }
+        });
+
+        // for BLL_markers
+        $('#BLLCheckbox').change(function() {
+             if (this.checked) {
+                $.get("getMarkets/", {'NET':'BLL'}, function(data){
+                    BLL_data_markets = JSON.parse(JSON.stringify(data));
+                    for (i = 0; i < BLL_data_markets.data.length; i++) {
+                        BLL_marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(BLL_data_markets.data[i]['market_lat'], BLL_data_markets.data[i]['market_lng']),
+                            map: map,
+                            icon: {
+                               url: 'http://www.billa.ru/WNBinaryWeb/108/764.png',
+                               scaledSize: new google.maps.Size(28, 22)
+                            }
+                        });
+                        BLL_markers.push(BLL_marker);
+                        google.maps.event.addListener(BLL_marker, 'click', (function(BLL_marker, i) {
+                        var BLLinfoWindow = new google.maps.InfoWindow();
+                            return function() {
+                                BLLinfoWindow.setContent(BLL_data_markets.data[i]['market_net'] + ' \,' + BLL_data_markets.data[i]['market_address_ru']);
+                                BLLinfoWindow.open(map, BLL_marker);
+                        }
+                    })(BLL_marker, i));
+                }
+                }, "json");
+             } else {
+                for (var i = 0; i < BLL_markers.length; i++) {
+                    BLL_markers[i].setMap(null);
+                }
+                BLL_markers = [];
+            }
+        });
+
+        // for VKTR_markers
+        $('#VKTRCheckbox').change(function() {
+             if (this.checked) {
+                $.get("getMarkets/", {'NET':'VKTR'}, function(data){
+                    VKTR_data_markets = JSON.parse(JSON.stringify(data));
+                    for (i = 0; i < VKTR_data_markets.data.length; i++) {
+                        VKTR_marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(VKTR_data_markets.data[i]['market_lat'], VKTR_data_markets.data[i]['market_lng']),
+                            map: map,
+                            icon: {
+                               url: 'https://www.victoria-group.ru/upload/iblock/3f9/3f975f6737c0a952a964c6d359326ce4.png',
+                               scaledSize: new google.maps.Size(28, 26)
+                            }
+                        });
+                        VKTR_markers.push(VKTR_marker);
+                        google.maps.event.addListener(VKTR_marker, 'click', (function(VKTR_marker, i) {
+                        var VKTRinfoWindow = new google.maps.InfoWindow();
+                            return function() {
+                                VKTRinfoWindow.setContent(VKTR_data_markets.data[i]['market_net'] + ' \,' + VKTR_data_markets.data[i]['market_address_ru']);
+                                VKTRinfoWindow.open(map, VKTR_marker);
+                        }
+                    })(VKTR_marker, i));
+                }
+                }, "json");
+             } else {
+                for (var i = 0; i < VKTR_markers.length; i++) {
+                    VKTR_markers[i].setMap(null);
+                }
+                VKTR_markers = [];
+            }
+        });
+
+        // for PRKRS_markers
+        $('#PRKRSCheckbox').change(function() {
+             if (this.checked) {
+                $.get("getMarkets/", {'NET':'PRKRS'}, function(data){
+                    PRKRS_data_markets = JSON.parse(JSON.stringify(data));
+                    for (i = 0; i < PRKRS_data_markets.data.length; i++) {
+                        PRKRS_marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(PRKRS_data_markets.data[i]['market_lat'], PRKRS_data_markets.data[i]['market_lng']),
+                            map: map,
+                            icon: {
+                                url: 'https://www.perekrestok.ru/build/img/mapMarkerLarge@2x.png',
+                                scaledSize: new google.maps.Size(30, 38)
+                            }
+                        });
+                        PRKRS_markers.push(PRKRS_marker);
+                        google.maps.event.addListener(PRKRS_marker, 'click', (function(PRKRS_marker, i) {
+                        var PRKRSinfoWindow = new google.maps.InfoWindow();
+                            return function() {
+                                PRKRSinfoWindow.setContent(PRKRS_data_markets.data[i]['market_net'] + ' \,' + PRKRS_data_markets.data[i]['market_address_ru']);
+                                PRKRSinfoWindow.open(map, PRKRS_marker);
+                        }
+                    })(PRKRS_marker, i));
+                }
+                }, "json");
+             } else {
+                for (var i = 0; i < PRKRS_markers.length; i++) {
+                    PRKRS_markers[i].setMap(null);
+                }
+                PRKRS_markers = [];
+            }
+        });
+
+        // for KRS markets
+        $('#KRSCheckbox').change(function() {
+             if (this.checked) {
+                $.get("getMarkets/", {'NET':'KRS'}, function(data){
+                    KRS_data_markets = JSON.parse(JSON.stringify(data));
+                    for (i = 0; i < KRS_data_markets.data.length; i++) {
+                        KRS_marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(KRS_data_markets.data[i]['market_lat'], KRS_data_markets.data[i]['market_lng']),
+                            map: map,
+                            icon: {
+                                url: 'https://karusel.ru/mapmarker.png',
+                                scaledSize: new google.maps.Size(20, 26)
+                            }
+                        });
+                        KRS_markers.push(KRS_marker);
+                        google.maps.event.addListener(KRS_marker, 'click', (function(KRS_marker, i) {
+                        var infoWindow = new google.maps.InfoWindow();
+                            return function() {
+                                infoWindow.setContent(KRS_data_markets.data[i]['market_net'] + ' \,' + KRS_data_markets.data[i]['market_address_ru']);
+                                infoWindow.open(map, KRS_marker);
+                        }
+                    })(KRS_marker, i));
+                }
+                }, "json");
+             } else {
+                for (var i = 0; i < KRS_markers.length; i++) {
+                    KRS_markers[i].setMap(null);
+                }
+                KRS_markers = [];
+            }
+        });
+
+        // for HZ markets
+        $('#HZCheckbox').change(function() {
+             if (this.checked) {
+                $.get("getMarkets/", {'NET':'HZ'}, function(data){
+                    HZ_data_markets = JSON.parse(JSON.stringify(data));
+                    for (i = 0; i < HZ_data_markets.data.length; i++) {
+                        HZ_marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(HZ_data_markets.data[i]['market_lat'], HZ_data_markets.data[i]['market_lng']),
+                            map: map //,
+                            // icon: {
+                             //  url: 'http://karusel.ru/img/pin.png' //,
+                            //    scaledSize: new google.maps.Size(34, 38)
+                            // }
+                        });
+                        HZ_markers.push(HZ_marker);
+                        google.maps.event.addListener(HZ_marker, 'click', (function(HZ_marker, i) {
+                        var infoWindow = new google.maps.InfoWindow();
+                            return function() {
+                                infoWindow.setContent(HZ_data_markets.data[i]['market_net'] + ' \,' + HZ_data_markets.data[i]['market_address_ru']);
+                                infoWindow.open(map, HZ_marker);
+                        }
+                    })(HZ_marker, i));
+                }
+                }, "json");
+             } else {
+                for (var i = 0; i < HZ_markers.length; i++) {
+                    HZ_markers[i].setMap(null);
+                }
+                HZ_markers = [];
+            }
+        });
 
     </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD35PcC-I9C8MPtomBPAqidVkkoic9zWXw&callback=initMap"></script> <!--  -->
-</div>
 
-<div class="row"></br></div>
-<div class="row"></br></div>
-
-<div id="exTab1" class="row">
-    <div id="massage"></div>
-    <label class="checkbox-inline">
-        <input type="checkbox" id="RouteCheck" value="route_type"> <span class="glyphicon glyphicon-flash"></span> Авто-определение стартовой точки маршрута
-    </label>
-
-    <form id="f_form">
-     <table class="table" id="route_table">
-      <thead class="thead-dark">
-        <tr>
-          <th style="width:3%" scope="col">  </th>
-          <th style="width:3%" scope="col">  </th>
-          <th scope="col">Адрес</th>
-          <th style="width:3%" scope="col">  </th>
-          <th style="width:5%" scope="col">Пнд</th>
-          <th style="width:5%" scope="col">Вт</th>
-          <th style="width:5%" scope="col">Ср</th>
-          <th style="width:5%" scope="col">Чтв</th>
-          <th style="width:5%" scope="col">Птн</th>
-          <th style="width:5%" scope="col">Сб</th>
-          <th style="width:5%" scope="col">Вск</th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
-    </table>
-    </form>
+    <div class="row">
+        <!-- // Фикс бага с картой -->
+        <div id="map" style="width: 100%; height: 600px"></div>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD35PcC-I9C8MPtomBPAqidVkkoic9zWXw&callback=initMap"></script> <!--  -->
+    </div>
 
     <div class="row"></br></div>
-
-    <button type="button" class="btn btn-success" id="button_add">Добавить точку</button>
-    <button type="button" class="btn btn-warning" id="button_view">Рассчитать!</button>
-    <button type="button" class="btn btn-info" id="button_xls_report">Выгрузка в .xls</button>
-    <a href="#SaveModal1" class="btn btn-primary pull-right" data-toggle="modal" id="button_save_report">Сохранить маршрут</a>
     <div class="row"></br></div>
 
-    <div id="SaveModal1" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title">Сохранить сценарий..</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="save_form" class="post-form">
-                        {% bootstrap_form save_form %}
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary" id="button_save_route">Ок!</button>
+    <div id="exTab1" class="row">
+        <div id="massage"></div>
+        <label class="checkbox-inline">
+            <input type="checkbox" id="RouteCheck" value="route_type"> <span class="glyphicon glyphicon-flash"></span> Авто-определение стартовой точки маршрута
+        </label>
+
+        <form id="f_form">
+         <table class="table" id="route_table">
+          <thead class="thead-dark">
+            <tr>
+              <th style="width:3%" scope="col">  </th>
+              <th style="width:3%" scope="col">  </th>
+              <th scope="col">Адрес</th>
+              <th style="width:3%" scope="col">  </th>
+              <th style="width:5%" scope="col">Пнд</th>
+              <th style="width:5%" scope="col">Вт</th>
+              <th style="width:5%" scope="col">Ср</th>
+              <th style="width:5%" scope="col">Чтв</th>
+              <th style="width:5%" scope="col">Птн</th>
+              <th style="width:5%" scope="col">Сб</th>
+              <th style="width:5%" scope="col">Вск</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        </form>
+
+        <div class="row"></br></div>
+
+        <button type="button" class="btn btn-success" id="button_add">Добавить точку</button>
+        <button type="button" class="btn btn-warning" id="button_view">Рассчитать!</button>
+        <button type="button" class="btn btn-info" id="button_xls_report">Выгрузка в .xls</button>
+        <a href="#SaveModal1" class="btn btn-primary pull-right" data-toggle="modal" id="button_save_report">Сохранить маршрут</a>
+        <div class="row"></br></div>
+
+        <div id="SaveModal1" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">Сохранить сценарий..</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="save_form" class="post-form">
+                            {% bootstrap_form save_form %}
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary" id="button_save_route">Ок!</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-</div>
+        <div class="row result_table_1"></div>
+        <div class="row"></br></div>
 
-    <div class="row result_table_1"></div>
-    <div class="row"></br></div>
-
-<script>
-    // Перемещение строк таблицы - вверх!
-    function MoveLineUp(element){
-        var row = $(element).parents("tr");
-        row.insertBefore(row.prev());
-    }
-
-    // Перемещение строк таблицы - вниз!
-    function MoveLineDown(element){
-        var row = $(element).parents("tr");
-        row.insertAfter(row.next());
-    }
-
-    // Сохранение маршрута
-    $("#button_save_route").click(
-        function(){
-            var dataArray = {'name_route': $("#id_route_name").val(), 'desc_route': $("#id_route_desc").val(), 'rawArray': bigArrayNorm};
-            $('#SaveModal1').modal('hide');
-            $.post("SaveRoute/", CircularJSON.stringify(dataArray), function(data){
-                console.log('Save route!');
-                $('#massage').show();
-                $('#massage').addClass("alert alert-success").append('<p>' + data['data'] + '</p>');
-            }, "json");
-        }
-    );
-
-    // Добавление нового поля
-    $("#button_add").click(
-        function(){
-            maxItem = 25;
-            index = $(".typeahead").length;
-            if (maxItem != 0 && index >= maxItem) {
-                $('#button_add').prop('disabled', true);
-            } else {
-                $("#route_table").append("<tr><td><a href=\"javascript:\/\/\" onclick=\"MoveLineUp(this)\"><span class=\"glyphicon glyphicon-arrow-up\"></span><\/a><\/td>" +
-                                        "<td><a href=\"javascript:\/\/\" onclick=\"MoveLineDown(this)\"><span class=\"glyphicon glyphicon-arrow-down\"></span><\/a><\/td>" +
-                                        "<td><input type=\"text\" class=\"typeahead form-control\" data-provide=\"typeahead\"><\/td>" +
-                                        "<td><a href=\"javascript:\/\/\" onclick=\"deleteItem(this)\"><span class=\"glyphicon glyphicon-remove\"></span></a><\/td>" +
-                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"pnd\" name=\"pnd\"><\/div><\/td>" +
-                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"vtr\" name=\"vtr\"><\/div><\/td>" +
-                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"srd\" name=\"srd\"><\/div><\/td>" +
-                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"chtv\" name=\"chtv\"><\/div><\/td>" +
-                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"ptn\" name=\"ptn\"><\/div><\/td>" +
-                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"sbt\" name=\"sbt\"><\/div><\/td>" +
-                                        "<td><div class=\"checkbox\"><input type=\"checkbox\" id=\"vskr\" name=\"vskr\"><\/div><\/td><\/tr>");
-                EnableButtonView();
-                var $input = $(".typeahead.form-control");
-                $.get("getAllMarkets/", function(data){
-                $input.typeahead({source: data, minLength:1, items:10, autoSelect:true,
-                    afterSelect: function (item){
-                        // Собираем адреса для поиска дублей
-                        addr_val_list = [];
-                        $(".typeahead.form-control").each(function(indx, element){
-                            addr_val_list.push($(element).val());
-                        });
-                        // Ищем дубли в выбраных точках
-                        for (addr_val of addr_val_list) {
-                            var new_addr_val_list = addr_val_list.slice();
-                            new_addr_val_list.splice(new_addr_val_list.indexOf(addr_val), 1);
-                            for (new_addr_val of new_addr_val_list) {
-                                if (addr_val == new_addr_val) {
-                                    // Блокируем расчет и ругаемся
-                                    $('#button_view').prop('disabled', true);
-                                    $('#massage').show();
-                                    $('#massage').addClass("alert alert-danger").append('<p>В таблице имеются дубликаты точек!</p>');
-                                    break;
-                                }
-                            }
-                        }
-
-                        // Блокируем ввод в инпут
-                        $('.typeahead').prop('disabled', true);
-                        // geocodeAddress(map, item);
-                        return item;
-                    }
-                });
-                }, "json");
-            }
-        }
-    );
-
-
-    // Удаляет таблицы результатов и связанные элементы
-    function clearElementsResult() {
-        // Удаляем все маршруты с карты
-        for (mk of bigArrayNorm){
-            mk.DirectRenderObj.setMap(null);
-        }
-        $('#result_tb_1_Понедельник').remove();
-        $('#result_tb_1_Вторник').remove();
-        $('#result_tb_1_Среда').remove();
-        $('#result_tb_1_Четверг').remove();
-        $('#result_tb_1_Пятница').remove();
-        $('#result_tb_1_Суббота').remove();
-        $('#result_tb_1_Воскресенье').remove();
-        // Очистка заголовков
-        $('h3').remove();
-        // Очистка сообщений
-        $('.alert').empty().hide();
-        // Удаление кнопок показа на карте
-        $('.btn.btn-default.btn-xs').remove();
-    }
-
-
-    // Удаление крестиком
-    function deleteItem(element) {
-        // Удаляем элемент (строку таблицы)
-        $(element).parent().parent().remove()
-        // Удаляем таблицы результатов, маршруты карты и связанные элементы
-        clearElementsResult();
-        EnableButtonView();
-        $('#button_xls_report').prop('disabled', true);
-        $('#button_save_report').addClass("disabled");
-
-        // Блокируем/разблокируем кнопочку добавления
-        maxItem = 25;
-        index = $(".typeahead").length;
-        if (maxItem != 0 && index >= maxItem) {
-            $('#button_add').prop('disabled', true);
-        } else {
-            $('#button_add').prop('disabled', false);
-        }
-    };
-
-    // Разблокируем кнопочку расчета, если более 3-х точек указано.
-    function EnableButtonView() {
-        addr_field = $(".typeahead.form-control").length;
-        if (addr_field >= 3) {
-            $('#button_view').prop('disabled', false);
-        } else {
-            $('#button_view').prop('disabled', true);
-        }
-    };
-
-    var start_address;
-    var end_address;
-    bigArrayNorm = [];
-    // Формируем запрос, отправляем, показываем на карте ("Расчет!")
-    $("#button_view").click(
-        function(){
-            // Очистка прошлых результатов
-            clearElementsResult();
-
-            // Понедельник!
-            var pnd_points = [];
-            $('input\[name=\'pnd\']').each(function(i,elem) {
-                if ($(this).is(':checked')) {
-                    var pnd_addr = $(this).parent().parent().parent().find('.typeahead.form-control').text();
-                    pnd_points.push(pnd_addr);
-                }
-            });
-            // Вторник
-            var vtr_points = [];
-            $('input\[name=\'vtr\']').each(function(i,elem) {
-                if ($(this).is(':checked')) {
-                    var vtr_addr = $(this).parent().parent().parent().find('.typeahead.form-control').text();
-                    vtr_points.push(vtr_addr);
-                }
-            });
-            // Среда
-            var srd_points = [];
-            $('input\[name=\'srd\']').each(function(i,elem) {
-                if ($(this).is(':checked')) {
-                    var srd_addr = $(this).parent().parent().parent().find('.typeahead.form-control').text();
-                    srd_points.push(srd_addr);
-                }
-            });
-            // Четверг
-            var chtv_points = [];
-            $('input\[name=\'chtv\']').each(function(i,elem) {
-                if ($(this).is(':checked')) {
-                    var chtv_addr = $(this).parent().parent().parent().find('.typeahead.form-control').text();
-                    chtv_points.push(chtv_addr);
-                }
-            });
-            // Пятница
-            var ptn_points = [];
-            $('input\[name=\'ptn\']').each(function(i,elem) {
-                if ($(this).is(':checked')) {
-                    var ptn_addr = $(this).parent().parent().parent().find('.typeahead.form-control').text();
-                    ptn_points.push(ptn_addr);
-                }
-            });
-            // Суббота
-            var sbt_points = [];
-            $('input\[name=\'sbt\']').each(function(i,elem) {
-                if ($(this).is(':checked')) {
-                    var sbt_addr = $(this).parent().parent().parent().find('.typeahead.form-control').text();
-                    sbt_points.push(sbt_addr);
-                }
-            });
-            // Воскресенье
-            var vskr_points = [];
-            $('input\[name=\'vskr\']').each(function(i,elem) {
-                if ($(this).is(':checked')) {
-                    var vskr_addr = $(this).parent().parent().parent().find('.typeahead.form-control').text();
-                    vskr_points.push(vskr_addr);
-                }
-            });
-
-            // Формируем массив чекбоксов по всем дням
-            bigArray = [{'day': 'Понедельник', 'points': pnd_points, 'calc_result': '', render_result: '', translitDict: '', DirectRenderObj: ''},
-                        {'day': 'Вторник', 'points': vtr_points, 'calc_result': '', render_result: '', translitDict: '', DirectRenderObj: ''},
-                        {'day': 'Среда', 'points': srd_points, 'calc_result': '', render_result: '', translitDict: '', DirectRenderObj: ''},
-                        {'day': 'Четверг', 'points': chtv_points, 'calc_result': '', render_result: '', translitDict: '', DirectRenderObj: ''},
-                        {'day': 'Пятница', 'points': ptn_points, 'calc_result': '', render_result: '', translitDict: '', DirectRenderObj: ''},
-                        {'day': 'Суббота', 'points': sbt_points, 'calc_result': '', render_result: '', translitDict: '', DirectRenderObj: ''},
-                        {'day': 'Воскресенье', 'points': vskr_points, 'calc_result': '', render_result: '', translitDict: '', DirectRenderObj: ''}];
-
-            // Сохраняем объекты DirectionsRenderer() из DirectRenderArray в bigArray
-            var i = 0;
-            for (ob of bigArray){
-                ob.DirectRenderObj = DirectRenderArray[i];
-                i++;
-            }
-
-            // Убираем дни где не выбрано не одного чекбокса. Уничтожаем bigArray.
-            bigArrayNorm = [];
-            for (d of bigArray){
-              if (d['points'].length != 0){
-                bigArrayNorm.push(d);
-              }
-            }
-            delete bigArray;
-
-            // Проверка на менее 3 точек в маршруте
-            for (dd of bigArrayNorm){
-                if (dd['points'].length < 3){
-                  $('#massage').show();
-                  $('#massage').addClass("alert alert-danger").append('<p>' + dd['day'] + ': выбранных точек должно быть не менее 3!</p>');
-                  return false;
-                }
-            }
-
-            // Проверка на пустые значения в инпутах
-            addr_val_list = [];
-            $(".typeahead.form-control").each(function(indx, element){
-                addr_val_list.push($(element).val());
-            });
-            for (addr_val of addr_val_list) {
-                if (addr_val == '') {
-                    $('#massage').addClass("alert alert-danger").append('<p>Вы должны выбрать значения во всех строках таблицы!</p>');
-                    return false
-                }
-            }
-
-            // Show loader
-            $('body').loading({message:'Подождите, пожалуйста, немного..'});
-
-            // Формируем запрос к бекенду на расчет в зависимости от выбранного режима
-            if ($('#RouteCheck').is(':checked')) {
-                // Автоматическое определение стартовой точки (стартовой точкой считается любая точка, лежащая в заданном радиусе от какой-либо станции метро)
-                for (var day of bigArrayNorm){
-                    // Первая выбранная в таблице точка считается первой точкой маршрута за день
-                    $.get("makeRouteAutoStart/", {'sendDay': day['day'], 'pointsArray': day['points']}, function(data){
-                        // Вернулся статус Fail
-                        if (data['status'] == 'Fail'){
-                            $('body').loading('stop');
-                            $('#massage').addClass("alert alert-danger").append('<p>'+ data['error_massage'] +'</p>');
-                            return false
-                        }
-                        var day = data['day'];
-                        var result = data['data'][0];
-                        sayGoogle(result, day);
-                    }, "json");
-                }
-            } else {
-                for (var day of bigArrayNorm){
-                    // Первая выбранная в таблице точка считается первой точкой маршрута за день
-                    $.get("makeRouteFixStart/", {'sendDay': day['day'], 'pointsArray': day['points']}, function(data){
-                        var day = data['day'];
-                        var result = data['data'][0];
-                        sayGoogle(result, day);
-                    }, "json");
-                }
-            }
-
-        // Обработка результата вызова google
-        function sayGoogle(min_time_result, day_name){
-            sourceTransArray = [];
-            uniqueSourceTransArray = [];
-            retranslitArray = {};
-
-            // Заголовок - day_name является id таблицы для результатов за день
-            $('.result_table_1').append('<h3>'+ day_name +'<\/h3>' +
-                                        '<a href=\"javascript:\/\/\" id=\"' + day_name + '\" onclick=\"ViewOnMap(this)\"><button type=\"button\" class=\"btn btn-default btn-xs\"><span class=\"glyphicon glyphicon-eye-open\"><\/span> На карте!<\/button><\/a>');
-            $('.result_table_1').append('<table class=\"table table-striped\" id=\"result_tb_1_'+ day_name +'\">' +
-                                        '<thead class=\"thead-dark\">' +
-                                        '<tr><th scope=\"col\">Начальная точка отрезка<\/th>' +
-                                        '<th scope=\"col\">Конечная точка отрезка<\/th>' +
-                                        '<th scope=\"col\">Расстояние, км<\/th>' +
-                                        '<th scope=\"col\">Время, мин<\/th>' +
-                                        '<th scope=\"col\">Время, ч<\/th><\/tr>' +
-                                        '<\/thead><tbody><\/tbody><\/table>');
-
-            // Готовим массив точек для /marketTranslit/
-            for (sp of min_time_result['legs']){
-                sourceTransArray.push(sp['start_address']);
-                sourceTransArray.push(sp['end_address']);
-            }
-
-            // Удаление дублей из sourceTransArray
-            $.each(sourceTransArray, function(i, el){
-                if($.inArray(el, uniqueSourceTransArray) === -1) uniqueSourceTransArray.push(el);
-            })
-
-            // Сохраняем оптимальный маршрут в bigArrayNorm[calc_result] для формирования запроса к Google Maps
-            for (sr of bigArrayNorm){
-                if (sr['day'] == day_name){
-                    sr.calc_result = min_time_result;
-                    continue;
-                }
-            }
-
-                // Запрос русских адресов и вывод таблиц результатов
-                $.post("marketTranslit/", {'data': uniqueSourceTransArray}, function(data){
-                    var ReadyTransArray = data['data'];
-                    // Сохраним словарь ReadyTransArray в translitDict объекта bigArrayNorm
-                    for (tr of bigArrayNorm){
-                        if (tr['day'] == day_name){
-                            tr.translitDict = ReadyTransArray;
-                            continue;
-                        }
-                    }
-                    // Вывод таблицы результатов
-                    for (good of min_time_result['legs']){
-                    $('#result_tb_1_'+ day_name).append('<tr><td>' + ReadyTransArray[good['start_address']] + '<\/td>' +
-                                        '<td>' + ReadyTransArray[good['end_address']] + '<\/td>' +
-                                        '<td>' + good['distance']['text'] + '<\/td>' +
-                                        '<td>' + good['duration']['text'] + '<\/td>' +
-                                        '<td>' + (good['duration']['value']/3600).toFixed(3) + '<\/td><\/tr>');
-                    }
-                    // Разблокируем кнопу генерации отчета
-                    $('#button_xls_report').prop('disabled', false);
-                    $('#button_save_report').removeClass("disabled");
-                }, "json");
-
-            // Hide loader
-            $('body').loading('stop');
-        };
-      });
-
-        function ViewOnMap(elem){
-            var directionsService = new google.maps.DirectionsService();
-            var best_route;
-
-            // Меняем значок на кнопе
-            var glaz = $(elem).find(">:first-child").find(">:first-child");
-
-            if (glaz.hasClass('glyphicon-eye-open')){
-                glaz.toggleClass('glyphicon-eye-open', false);
-                glaz.toggleClass('glyphicon-eye-close');
-                renderMap();
-            } else {
-                glaz.toggleClass('glyphicon-eye-close', false);
-                glaz.toggleClass('glyphicon-eye-open');
-                // Убиваем маршрут с карты
-                for (y of bigArrayNorm){
-                    if (y['day'] == elem.id){
-                        y.DirectRenderObj.setMap(null);
-                    }
-                }
-            }
-
-            function renderMap(){
-                // Ищем в bigArrayNorm поинты соответствующие выбранному дню
-                for (it of bigArrayNorm){
-                    if (it['day'] == elem.id){
-                        break;
-                    }
-                }
-
-                // Вяжем объект рендера к карте
-                it.DirectRenderObj.setMap(map);
-                if (it['render_result'] == ''){
-                    // Еще не получали DirectionsRenderer -> будем получать
-                    best_route = it['calc_result']
-                    var start_point = it['translitDict'][best_route['legs'][0]['start_address']];
-                    var finish_point = it['translitDict'][best_route['legs'][(best_route['legs'].length - 1)]['end_address']];
-
-                    // Формируем waypoints
-                    way_points = it['points'].slice();
-                    way_points.splice(way_points.indexOf(start_point), 1);
-                    way_points.splice(way_points.indexOf(finish_point), 1);
-
-                    // Кодирование DirectionsWaypoint[]
-                    var waypts = [];
-                    for (f of  way_points){
-                      waypts.push({
-                        location: f,
-                        stopover: true
-                      });
-                    }
-
-                    // Формируем запрос к дирекшн
-                    var request = {
-                      origin: start_point,
-                      destination: finish_point,
-                      waypoints: waypts,
-                      travelMode: 'WALKING',
-                      unitSystem: google.maps.UnitSystem.METRIC,
-                      optimizeWaypoints: true};
-
-                    directionsService.route(request, function(result, status){
-                        if (status == 'OK'){
-                            it.DirectRenderObj.setDirections(result);
-                            it['render_result'] = result;
-                        } else {
-                            console.log('Что-то пошло не так, ибо пришел статус: ' + status);
-                            return false
-                        }
-                    });
-
-                } else {
-                    // DirectionsRenderer имеется, рисуем
-                    it.DirectRenderObj.setDirections(it['render_result']);
-                }
-            };
-        };
-
-
-    // Отправляем запрос на формирование XLS
-    $("#button_xls_report").click(
-        function() {
-            $.ajax({type: 'POST', contentType: "application/json", url: 'makeXlsReport/', data : CircularJSON.stringify(bigArrayNorm), success: function(data) {
-                console.log('loading complete..');
-                window.open('data:application/vnd.ms-excel;base64,'+data, '_blank');
-            }
-        });
-    });
-
-</script>
-
-<footer class="footer">
-    <div class="container">
-        <p class="text-muted"><span class="glyphicon glyphicon-fire"></span> 2018 г. - Сделано для хороших людей.</p>
-    </div>
-</footer>
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted"><span class="glyphicon glyphicon-fire"></span> 2018 г. - Сделано для хороших людей.</p>
+        </div>
+    </footer>
 
 </body>
 </html>
