@@ -118,8 +118,10 @@ def makeRouteFixStart(request):
                                   units="metric",
                                   optimize_waypoints=True)
 
-        # TODO глянуть логгирование после выкладки
-        # Бага из-за Варшавское шоссе, 21-й км, Москва, 117405
+        if not routes:
+            response = {'day': load_day,
+                        'error_massage': 'День: {0}. Ошибка в массиве адресов.'.format(load_day), 'status': 'Fail'}
+            return JsonResponse(response)
 
         count_time = 0
         for w in range(len(routes[0]['legs'])):
@@ -212,6 +214,11 @@ def makeRouteAutoStart(request):
                                       waypoints=waypoints_list,
                                       units="metric",
                                       optimize_waypoints=True)
+
+            if not routes:
+                response = {'day': load_day,
+                            'error_massage': 'День: {0}. Ошибка в массиве адресов.'.format(load_day), 'status': 'Fail'}
+                return JsonResponse(response)
 
             count_time = 0
             # Получаем общее время

@@ -202,12 +202,12 @@ class MakeRouteFixStartViewTest(TestCase):
                 'pointsArray[]': ['г. Москва, ул. Академика Варги д.8 корп.1 ТК "Лейпциг"',
                                   'Москва, ул.Профсоюзная, д.98, корп.1',
                                   'Москва, ул. Бутлерова, д. 24В',
-                                  'Москва, ул.Профсоюзная, д.152, к.2, стр.2',
+                                  # 'Москва, ул.Профсоюзная, д.152, к.2, стр.2',
                                   'Москва, ул.Академика Варги, д.4А']}
 
     correct_test_route = ['улица Академика Варги, 8, корп. 1, Москва, г. Москва, Russia, 117133',
                           'Ulitsa Akademika Vargi, 4А, Moskva, Russia, 117133',
-                          'Profsoyuznaya Ulitsa, 152 корпус 2, Moskva, Russia, 117321',
+                          # 'Profsoyuznaya Ulitsa, 152 корпус 2, Moskva, Russia, 117321',
                           'Profsoyuznaya Ulitsa, 98 корпус 1, Moskva, Russia, 117485',
                           'Ulitsa Butlerova, 24В, Moskva, Russia, 117342']
 
@@ -219,7 +219,7 @@ class MakeRouteFixStartViewTest(TestCase):
         google_response = response.json()['data'][0]['legs']
         for count_id, leg in enumerate(google_response):
             self.assertEqual(leg['start_address'], self.correct_test_route[count_id])
-        self.assertEqual(google_response[3]['end_address'], self.correct_test_route[4])
+        self.assertEqual(google_response[2]['end_address'], self.correct_test_route[3])
 
 
 class MakeRouteAutoStartViewTest(TestCase):
