@@ -15,7 +15,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse
 
-from .models import MarketModel, RouteModel, MetroModel
+from .models import MarketModel, RouteModel, MetroModel, NetModel
 from .forms import MarketForm, SaveRouteForm
 
 
@@ -82,6 +82,18 @@ def getAllMarkets(request):
     for i in queryset:
         json_list.append(i)
     return JsonResponse(json_list, safe=False)
+
+
+# Отдает все активные сети (фильтр для Google Maps).
+@csrf_exempt
+@require_http_methods(['POST'])
+def getNets(request):
+    net_list = []
+    for nets_param in NetModel.objects.filter(net_status=True).values_list('net_code', 'net_name', 'net_icon_link',
+                                                                           'net_icon_size_x', 'net_icon_size_y'):
+        net_list.append(nets_param)
+    response = {'data': list(net_list), 'status': 'OK'}
+    return JsonResponse(response)
 
 
 # Отдает все точки запрошенной сети (фильтр для Google Maps).

@@ -31,7 +31,9 @@
     <script src=" {% static "js/bootstrap.min.js" %}"></script>
     <script src=" {% static "js/bootstrap3-typeahead.min.js" %}"></script>
     <script src=" {% static "js/circular-json.js" %}"></script>
+    <script src=" {% static "js/markerclusterer.js" %}"></script>
 
+    <script src=" {% static "js/app/netModule.js" %}"></script>
     <script src=" {% static "js/app/routeModule.js" %}"></script>
     <script src=" {% static "js/app/tableModule.js" %}"></script>
     <script src=" {% static "js/app/initMap.js" %}"></script>
@@ -40,62 +42,56 @@
     <div class="navbar navbar-default navbar-static-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                </button>
                 <a class="navbar-brand" href="/">MerchRoutes</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Проект</a></li>
-                <li><a href="/addmarket/">Добавить</a></li>
+                    <li class="active"><a href="/">Проект</a></li>
+                    <li><a href="/addmarket/">Добавить</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                <li><a href="/news/">Новое!</a></li>
+                    <li><a href="/news/">Новое!</a></li>
                 </ul>
             </div>
         </div>
     </div>
 
-
     <div class="container">
-    <h2>Проектирование маршрута</h2>
-
-        <div class="row"></div>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="DKSCheckbox" value="option1"> Дикси
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="PRKRSCheckbox" value="option2"> Перекресток
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="VKTRCheckbox" value="option3"> Виктория
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="BLLCheckbox" value="option4"> BILLA
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="KRSCheckbox" value="option5"> Карусель
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="HZCheckbox" value="option6"> ТД "Холдинг-Центр"
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="MGTCheckbox" value="option7"> Магнит
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="PTRKCheckbox" value="option7"> Пятерочка
-        </label>
-        <label class="checkbox-inline">
-            <input type="checkbox" id="LNTCheckbox" value="option9"> Лента
-        </label>
+        <div class="row filter-map">
+            <h2>Проектирование маршрута</h2>
+                <!-- <label class="checkbox-inline">
+                    <input type="checkbox" id="DKSCheckbox" value="option1"> Дикси
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="PRKRSCheckbox" value="option2"> Перекресток
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="VKTRCheckbox" value="option3"> Виктория
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="BLLCheckbox" value="option4"> BILLA
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="KRSCheckbox" value="option5"> Карусель
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="HZCheckbox" value="option6"> ТД "Холдинг-Центр"
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="MGTCheckbox" value="option7"> Магнит
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="PTRKCheckbox" value="option7"> Пятерочка
+                </label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" id="LNTCheckbox" value="option9"> Лента
+                </label> -->
+        </div>
         <div class="row"></br></div>
 
     <script>
 
+        /*
         var KRS_markers = [];
         var PRKRS_markers = [];
         var VKTR_markers = [];
@@ -393,7 +389,7 @@
                 HZ_markers = [];
             }
         });
-
+        */
     </script>
 
     <div class="row">

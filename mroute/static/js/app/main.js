@@ -1,6 +1,6 @@
 /* MerchRoutes - main.js */
 
-'use strict';
+// 'use strict';
 
 $(window).load(
     function(){
@@ -10,9 +10,12 @@ $(window).load(
         window.$buttonAdd = '#button_add',
         window.$buttonSave = '#button_save_route',
         window.$buttonXlsReport = '#button_xls_report',
+        window.$filter = '.row.filter-map',
+        window.filtersArray = [],
         window.bigArrayNorm = [];
 
         initMap();
+        getFilterNets();
 
         $($buttonView).click(
             function(){
@@ -66,7 +69,7 @@ $(window).load(
                 $.ajax({type: 'POST',
                 contentType: 'application/json',
                 url: 'makeXlsReport/',
-                data : CircularJSON.stringify(bigArrayNorm),
+                data: CircularJSON.stringify(bigArrayNorm),
                 success: function(data) {
                     window.open('data:application/vnd.ms-excel;base64,'+data, '_blank');
                 }
@@ -74,17 +77,38 @@ $(window).load(
         });
     });
 
-    function clearElementsResult() {
-        // Delete routes from the map
-        for (var mk of bigArrayNorm){
-            mk.DirectRenderObj.setMap(null);
-        }
-        // Delete massages
-        $('.alert').empty().hide();
-        // Clear result_table_1 div
-        $("div.result_table_1").empty()
-        // Disabled buttons
-        $($buttonXlsReport).prop('disabled', true);
-        $('#button_save_report').addClass('disabled');
+function clearElementsResult() {
+    // Delete routes from the map
+    for (var mk of bigArrayNorm){
+        mk.DirectRenderObj.setMap(null);
+    }
+    // Delete massages
+    $('.alert').empty().hide();
+    // Clear result_table_1 div
+    $("div.result_table_1").empty()
+    // Disabled buttons
+    $($buttonXlsReport).prop('disabled', true);
+    $('#button_save_report').addClass('disabled');
+};
 
-    };
+function getFilterNets() {
+    $.ajax({
+        type: 'POST',
+        contentType: 'application/json',
+        url: 'getNets/',
+        success: function(data) {
+            if (data['status'] == 'OK') {
+                for (var net of data['data']) {
+                    var filter = new netModule.Init(net);
+                    netModule.showFilterNet(filter);
+                    filtersArray.push(filter);
+                }
+            } else {
+                // TODO error massage
+            }
+        },
+        error: function(data) {
+            // TODO error massage
+        }
+    })
+};

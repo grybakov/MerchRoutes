@@ -1,30 +1,27 @@
 from django.db import models
 
 
-"""class NetModel(models.Model):
+class NetModel(models.Model):
     net_code = models.CharField(null=False, max_length=100, verbose_name='Код сети (латиница)')
     net_name = models.CharField(null=False, max_length=100, verbose_name='Название сети (кирилица)')
+    net_icon_link = models.CharField(null=True, blank=True, max_length=300, verbose_name='Ссылка на иконку')
+    net_icon_size_x = models.CharField(null=True, blank=True, max_length=10, verbose_name='Размер иконки по X')
+    net_icon_size_y = models.CharField(null=True, blank=True, max_length=10, verbose_name='Размер иконки по Y')
     net_status = models.BooleanField(null=False, default=True, verbose_name='Статус')
 
+    @classmethod
+    def get_points_type(cls):
+        POINT_TYPE = []
+        for nets_param in NetModel.objects.all().values_list('net_code', 'net_name'):
+            POINT_TYPE.append(nets_param)
+        return tuple(POINT_TYPE)
+
     class Meta:
-        db_table = 'Nets' """
+        db_table = 'Nets'
 
 
 class MarketModel(models.Model):
-
-    POINT_TYPE = (
-        ('DKS', 'Дикси'),
-        ('PRKRS', 'Перекресток'),
-        ('VKTR', 'Виктория'),
-        ('BLL', 'BILLA'),
-        ('KRS', 'Карусель'),
-        ('HZ', 'ТД "Холдинг-Центр"'),
-        ('MGT', 'Магнит'),
-        ('PTRK', 'Пятерочка'),
-        ('LNT', 'Лента'),
-    )
-    market_net = models.CharField(choices=POINT_TYPE, null=False, max_length=400, verbose_name='Сеть')
-    # market_net = models.ForeignKey(NetModel, on_delete=models.PROTECT)
+    market_net = models.CharField(choices=NetModel.get_points_type(), null=False, max_length=400, verbose_name='Сеть')
     market_address_ru = models.CharField(null=False, max_length=400, verbose_name='Адрес (кирилица)')
     market_address_en = models.CharField(max_length=400, verbose_name='Адрес (латиница)')
     market_lat = models.FloatField(verbose_name='Координата X')
