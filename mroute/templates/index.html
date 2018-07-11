@@ -59,343 +59,13 @@
     <div class="container">
         <div class="row filter-map">
             <h2>Проектирование маршрута</h2>
-                <!-- <label class="checkbox-inline">
-                    <input type="checkbox" id="DKSCheckbox" value="option1"> Дикси
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" id="PRKRSCheckbox" value="option2"> Перекресток
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" id="VKTRCheckbox" value="option3"> Виктория
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" id="BLLCheckbox" value="option4"> BILLA
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" id="KRSCheckbox" value="option5"> Карусель
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" id="HZCheckbox" value="option6"> ТД "Холдинг-Центр"
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" id="MGTCheckbox" value="option7"> Магнит
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" id="PTRKCheckbox" value="option7"> Пятерочка
-                </label>
-                <label class="checkbox-inline">
-                    <input type="checkbox" id="LNTCheckbox" value="option9"> Лента
-                </label> -->
         </div>
         <div class="row"></br></div>
-
-    <script>
-
-        /*
-        var KRS_markers = [];
-        var PRKRS_markers = [];
-        var VKTR_markers = [];
-        var BLL_markers = [];
-        var DKS_markers = [];
-        var HZ_markers = [];
-        var MGT_markers = [];
-        var PTRK_markers = [];
-        var LNT_markers = [];
-
-        // for LNT_markers
-        $('#LNTCheckbox').change(function() {
-             if (this.checked) {
-                $.get("getMarkets/", {'NET':'LNT'}, function(data){
-                    LNT_data_markets = JSON.parse(JSON.stringify(data));
-                    for (i = 0; i < LNT_data_markets.data.length; i++) {
-                        LNT_marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(LNT_data_markets.data[i]['market_lat'], LNT_data_markets.data[i]['market_lng']),
-                            map: map //,
-                            // icon: {
-                                // url: 'https://5ka.ru/static/web/img/ico-pinmap-active.png',
-                                // scaledSize: new google.maps.Size(20, 30)
-                            // }
-                        });
-                        LNT_markers.push(LNT_marker);
-                        google.maps.event.addListener(LNT_marker, 'click', (function(LNT_marker, i) {
-                        var LNTinfoWindow = new google.maps.InfoWindow();
-                            return function() {
-                                LNTinfoWindow.setContent(LNT_data_markets.data[i]['market_net'] + ' \,' + LNT_data_markets.data[i]['market_address_ru']);
-                                LNTinfoWindow.open(map, LNT_marker);
-                        }
-                    })(LNT_marker, i));
-                }
-                }, "json");
-             } else {
-                for (var i = 0; i < LNT_markers.length; i++) {
-                    LNT_markers[i].setMap(null);
-                }
-                LNT_markers = [];
-            }
-        });
-
-        // for PTRK_markers
-        $('#PTRKCheckbox').change(function() {
-             if (this.checked) {
-                $.get("getMarkets/", {'NET':'PTRK'}, function(data){
-                    PTRK_data_markets = JSON.parse(JSON.stringify(data));
-                    for (i = 0; i < PTRK_data_markets.data.length; i++) {
-                        PTRK_marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(PTRK_data_markets.data[i]['market_lat'], PTRK_data_markets.data[i]['market_lng']),
-                            map: map,
-                            icon: {
-                                url: 'https://5ka.ru/static/web/img/ico-pinmap-active.png',
-                                scaledSize: new google.maps.Size(20, 30)
-                            }
-                        });
-                        PTRK_markers.push(PTRK_marker);
-                        google.maps.event.addListener(PTRK_marker, 'click', (function(PTRK_marker, i) {
-                        var PTRKinfoWindow = new google.maps.InfoWindow();
-                            return function() {
-                                PTRKinfoWindow.setContent(PTRK_data_markets.data[i]['market_net'] + ' \,' + PTRK_data_markets.data[i]['market_address_ru']);
-                                PTRKinfoWindow.open(map, PTRK_marker);
-                        }
-                    })(PTRK_marker, i));
-                }
-                }, "json");
-             } else {
-                for (var i = 0; i < PTRK_markers.length; i++) {
-                    PTRK_markers[i].setMap(null);
-                }
-                PTRK_markers = [];
-            }
-        });
-
-        // for MGT_markers
-        $('#MGTCheckbox').change(function() {
-             if (this.checked) {
-                $.get("getMarkets/", {'NET':'MGT'}, function(data){
-                    MGT_data_markets = JSON.parse(JSON.stringify(data));
-                    for (i = 0; i < MGT_data_markets.data.length; i++) {
-                        MGT_marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(MGT_data_markets.data[i]['market_lat'], MGT_data_markets.data[i]['market_lng']),
-                            map: map,
-                            icon: {
-                                url: 'http://magnit-info.ru/bitrix/templates/magnit_new_d/img/general/pin-hyper.png',
-                                scaledSize: new google.maps.Size(24, 34)
-                            }
-                        });
-                        MGT_markers.push(MGT_marker);
-                        google.maps.event.addListener(MGT_marker, 'click', (function(MGT_marker, i) {
-                        var MGTinfoWindow = new google.maps.InfoWindow();
-                            return function() {
-                                MGTinfoWindow.setContent(MGT_data_markets.data[i]['market_net'] + ' \,' + MGT_data_markets.data[i]['market_address_ru']);
-                                MGTinfoWindow.open(map, MGT_marker);
-                        }
-                    })(MGT_marker, i));
-                }
-                }, "json");
-             } else {
-                for (var i = 0; i < MGT_markers.length; i++) {
-                    MGT_markers[i].setMap(null);
-                }
-                MGT_markers = [];
-            }
-        });
-
-        // for DKS_markers
-        $('#DKSCheckbox').change(function() {
-             if (this.checked) {
-                $.get("getMarkets/", {'NET':'DKS'}, function(data){
-                    DKS_data_markets = JSON.parse(JSON.stringify(data));
-                    for (i = 0; i < DKS_data_markets.data.length; i++) {
-                        DKS_marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(DKS_data_markets.data[i]['market_lat'], DKS_data_markets.data[i]['market_lng']),
-                            map: map,
-                            icon: {
-                                url: 'https://dixy.ru/local/templates/dixy/images/icon-map.png',
-                                scaledSize: new google.maps.Size(22, 35)
-                            }
-                        });
-                        DKS_markers.push(DKS_marker);
-                        google.maps.event.addListener(DKS_marker, 'click', (function(DKS_marker, i) {
-                        var DKSinfoWindow = new google.maps.InfoWindow();
-                            return function() {
-                                DKSinfoWindow.setContent(DKS_data_markets.data[i]['market_net'] + ' \,' + DKS_data_markets.data[i]['market_address_ru']);
-                                DKSinfoWindow.open(map, DKS_marker);
-                        }
-                    })(DKS_marker, i));
-                }
-                }, "json");
-             } else {
-                for (var i = 0; i < DKS_markers.length; i++) {
-                    DKS_markers[i].setMap(null);
-                }
-                DKS_markers = [];
-            }
-        });
-
-        // for BLL_markers
-        $('#BLLCheckbox').change(function() {
-             if (this.checked) {
-                $.get("getMarkets/", {'NET':'BLL'}, function(data){
-                    BLL_data_markets = JSON.parse(JSON.stringify(data));
-                    for (i = 0; i < BLL_data_markets.data.length; i++) {
-                        BLL_marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(BLL_data_markets.data[i]['market_lat'], BLL_data_markets.data[i]['market_lng']),
-                            map: map,
-                            icon: {
-                               url: 'http://www.billa.ru/WNBinaryWeb/108/764.png',
-                               scaledSize: new google.maps.Size(28, 22)
-                            }
-                        });
-                        BLL_markers.push(BLL_marker);
-                        google.maps.event.addListener(BLL_marker, 'click', (function(BLL_marker, i) {
-                        var BLLinfoWindow = new google.maps.InfoWindow();
-                            return function() {
-                                BLLinfoWindow.setContent(BLL_data_markets.data[i]['market_net'] + ' \,' + BLL_data_markets.data[i]['market_address_ru']);
-                                BLLinfoWindow.open(map, BLL_marker);
-                        }
-                    })(BLL_marker, i));
-                }
-                }, "json");
-             } else {
-                for (var i = 0; i < BLL_markers.length; i++) {
-                    BLL_markers[i].setMap(null);
-                }
-                BLL_markers = [];
-            }
-        });
-
-        // for VKTR_markers
-        $('#VKTRCheckbox').change(function() {
-             if (this.checked) {
-                $.get("getMarkets/", {'NET':'VKTR'}, function(data){
-                    VKTR_data_markets = JSON.parse(JSON.stringify(data));
-                    for (i = 0; i < VKTR_data_markets.data.length; i++) {
-                        VKTR_marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(VKTR_data_markets.data[i]['market_lat'], VKTR_data_markets.data[i]['market_lng']),
-                            map: map,
-                            icon: {
-                               url: 'https://www.victoria-group.ru/upload/iblock/3f9/3f975f6737c0a952a964c6d359326ce4.png',
-                               scaledSize: new google.maps.Size(28, 26)
-                            }
-                        });
-                        VKTR_markers.push(VKTR_marker);
-                        google.maps.event.addListener(VKTR_marker, 'click', (function(VKTR_marker, i) {
-                        var VKTRinfoWindow = new google.maps.InfoWindow();
-                            return function() {
-                                VKTRinfoWindow.setContent(VKTR_data_markets.data[i]['market_net'] + ' \,' + VKTR_data_markets.data[i]['market_address_ru']);
-                                VKTRinfoWindow.open(map, VKTR_marker);
-                        }
-                    })(VKTR_marker, i));
-                }
-                }, "json");
-             } else {
-                for (var i = 0; i < VKTR_markers.length; i++) {
-                    VKTR_markers[i].setMap(null);
-                }
-                VKTR_markers = [];
-            }
-        });
-
-        // for PRKRS_markers
-        $('#PRKRSCheckbox').change(function() {
-             if (this.checked) {
-                $.get("getMarkets/", {'NET':'PRKRS'}, function(data){
-                    PRKRS_data_markets = JSON.parse(JSON.stringify(data));
-                    for (i = 0; i < PRKRS_data_markets.data.length; i++) {
-                        PRKRS_marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(PRKRS_data_markets.data[i]['market_lat'], PRKRS_data_markets.data[i]['market_lng']),
-                            map: map,
-                            icon: {
-                                url: 'https://www.perekrestok.ru/build/img/mapMarkerLarge@2x.png',
-                                scaledSize: new google.maps.Size(30, 38)
-                            }
-                        });
-                        PRKRS_markers.push(PRKRS_marker);
-                        google.maps.event.addListener(PRKRS_marker, 'click', (function(PRKRS_marker, i) {
-                        var PRKRSinfoWindow = new google.maps.InfoWindow();
-                            return function() {
-                                PRKRSinfoWindow.setContent(PRKRS_data_markets.data[i]['market_net'] + ' \,' + PRKRS_data_markets.data[i]['market_address_ru']);
-                                PRKRSinfoWindow.open(map, PRKRS_marker);
-                        }
-                    })(PRKRS_marker, i));
-                }
-                }, "json");
-             } else {
-                for (var i = 0; i < PRKRS_markers.length; i++) {
-                    PRKRS_markers[i].setMap(null);
-                }
-                PRKRS_markers = [];
-            }
-        });
-
-        // for KRS markets
-        $('#KRSCheckbox').change(function() {
-             if (this.checked) {
-                $.get("getMarkets/", {'NET':'KRS'}, function(data){
-                    KRS_data_markets = JSON.parse(JSON.stringify(data));
-                    for (i = 0; i < KRS_data_markets.data.length; i++) {
-                        KRS_marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(KRS_data_markets.data[i]['market_lat'], KRS_data_markets.data[i]['market_lng']),
-                            map: map,
-                            icon: {
-                                url: 'https://karusel.ru/mapmarker.png',
-                                scaledSize: new google.maps.Size(20, 26)
-                            }
-                        });
-                        KRS_markers.push(KRS_marker);
-                        google.maps.event.addListener(KRS_marker, 'click', (function(KRS_marker, i) {
-                        var infoWindow = new google.maps.InfoWindow();
-                            return function() {
-                                infoWindow.setContent(KRS_data_markets.data[i]['market_net'] + ' \,' + KRS_data_markets.data[i]['market_address_ru']);
-                                infoWindow.open(map, KRS_marker);
-                        }
-                    })(KRS_marker, i));
-                }
-                }, "json");
-             } else {
-                for (var i = 0; i < KRS_markers.length; i++) {
-                    KRS_markers[i].setMap(null);
-                }
-                KRS_markers = [];
-            }
-        });
-
-        // for HZ markets
-        $('#HZCheckbox').change(function() {
-             if (this.checked) {
-                $.get("getMarkets/", {'NET':'HZ'}, function(data){
-                    HZ_data_markets = JSON.parse(JSON.stringify(data));
-                    for (i = 0; i < HZ_data_markets.data.length; i++) {
-                        HZ_marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(HZ_data_markets.data[i]['market_lat'], HZ_data_markets.data[i]['market_lng']),
-                            map: map //,
-                            // icon: {
-                             //  url: 'http://karusel.ru/img/pin.png' //,
-                            //    scaledSize: new google.maps.Size(34, 38)
-                            // }
-                        });
-                        HZ_markers.push(HZ_marker);
-                        google.maps.event.addListener(HZ_marker, 'click', (function(HZ_marker, i) {
-                        var infoWindow = new google.maps.InfoWindow();
-                            return function() {
-                                infoWindow.setContent(HZ_data_markets.data[i]['market_net'] + ' \,' + HZ_data_markets.data[i]['market_address_ru']);
-                                infoWindow.open(map, HZ_marker);
-                        }
-                    })(HZ_marker, i));
-                }
-                }, "json");
-             } else {
-                for (var i = 0; i < HZ_markers.length; i++) {
-                    HZ_markers[i].setMap(null);
-                }
-                HZ_markers = [];
-            }
-        });
-        */
-    </script>
 
     <div class="row">
         <!-- // Фикс бага с картой -->
         <div id="map" style="width: 100%; height: 600px"></div>
-        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD35PcC-I9C8MPtomBPAqidVkkoic9zWXw&callback=initMap"></script> <!--  -->
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD35PcC-I9C8MPtomBPAqidVkkoic9zWXw&callback=initMap"></script>
     </div>
 
     <div class="row"></br></div>
@@ -408,25 +78,25 @@
         </label>
 
         <form id="f_form">
-         <table class="table" id="route_table">
-          <thead class="thead-dark">
-            <tr>
-              <th style="width:3%" scope="col">  </th>
-              <th style="width:3%" scope="col">  </th>
-              <th scope="col">Адрес</th>
-              <th style="width:3%" scope="col">  </th>
-              <th style="width:5%" scope="col">Пнд</th>
-              <th style="width:5%" scope="col">Вт</th>
-              <th style="width:5%" scope="col">Ср</th>
-              <th style="width:5%" scope="col">Чтв</th>
-              <th style="width:5%" scope="col">Птн</th>
-              <th style="width:5%" scope="col">Сб</th>
-              <th style="width:5%" scope="col">Вск</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
+            <table class="table" id="route_table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="width:3%" scope="col">  </th>
+                        <th style="width:3%" scope="col">  </th>
+                        <th scope="col">Адрес</th>
+                        <th style="width:3%" scope="col">  </th>
+                        <th style="width:5%" scope="col">Пнд</th>
+                        <th style="width:5%" scope="col">Вт</th>
+                        <th style="width:5%" scope="col">Ср</th>
+                        <th style="width:5%" scope="col">Чтв</th>
+                        <th style="width:5%" scope="col">Птн</th>
+                        <th style="width:5%" scope="col">Сб</th>
+                        <th style="width:5%" scope="col">Вск</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </form>
 
         <div class="row"></br></div>
