@@ -204,7 +204,7 @@ class MakeRouteFixStartViewTest(TestCase):
                                   'Москва, ул. Бутлерова, д. 24В',
                                   'Москва, ул.Академика Варги, д.4А']}
 
-    correct_test_route = ['улица Академика Варги, 8, корп. 1, Москва, г. Москва, Russia, 117133',
+    correct_test_route = ['Ulitsa Akademika Vargi, 8, корп. 1, Moskva, Russia, 117133',
                           'Ulitsa Akademika Vargi, 4А, Moskva, Russia, 117133',
                           'Profsoyuznaya Ulitsa, 98 корпус 1, Moskva, Russia, 117485',
                           'Ulitsa Butlerova, 24В, Moskva, Russia, 117342']
