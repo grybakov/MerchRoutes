@@ -4,9 +4,8 @@
 
 var netModule = (function() {
 
-    $filter = '.row.filter-map';
-
-    var clusterImagePath = 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m';
+    var $filter = '.row.filter-map',
+        clusterImagePath = 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m';
 
     function findNetObj(element) {
         var element_code = $(element).val();
@@ -23,22 +22,6 @@ var netModule = (function() {
             var markers = [];
 
             netObj.data_markets = JSON.parse(JSON.stringify(data));
-
-            /* switch (true) {
-                case netObj.icon_link == 'null' && netObj.icon_size_x == 'null':
-                    var icon = null;
-                    var icon_size = null;
-                case netObj.icon_link != 'null' && netObj.icon_size_x == 'null':
-                    var icon = netObj.icon_link;
-                    var icon_size = null;
-                case netObj.icon_link != 'null' && netObj.icon_size_x != 'null':
-                    console.log(netObj);
-                    var icon = netObj.icon_link;
-                    var icon_size = new google.maps.Size(netObj.icon_size_x,netObj.icon_size_y);
-                default:
-                    var icon = null;
-                    var icon_size = null;
-            }; */
 
             for (i = 0; i < netObj.data_markets.data.length; i++) {
                 var market_lat = netObj.data_markets.data[i]['market_lat'];
@@ -61,14 +44,11 @@ var netModule = (function() {
 
             if (netObj.icon_link){
                 for (mk of markers) {
-                    mk.setIcon({url: netObj.icon_link}); //, scaledSize: new google.maps.Size(netObj.icon_size_x,netObj.icon_size_y)});
-                    // mk.icon.scaledSize = new google.maps.Size(netObj.icon_size_x, netObj.icon_size_y);
-                    // mk.icon.scaledSize = new google.maps.Size(netObj.icon_size_x, netObj.icon_size_y);
+                    mk.setIcon({url: netObj.icon_link});
                 }
             }
 
             netObj.markerCluster = new MarkerClusterer(map, markers, {imagePath: clusterImagePath});
-
             netObj.markers = markers.slice();
             markers = [];
         }, "json");
@@ -102,7 +82,6 @@ var netModule = (function() {
         },
 
         getNetMarkets: function(element) {
-
             var netObj = findNetObj(element);
 
             if (element.checked) {
