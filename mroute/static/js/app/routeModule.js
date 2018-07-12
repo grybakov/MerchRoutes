@@ -1,6 +1,6 @@
 /* routeModule.js */
 
-// "use strict"; TODO use strict
+"use strict";
 
 var dayRoute = (function(){
 
@@ -62,7 +62,7 @@ var dayRoute = (function(){
                                     '<\/thead><tbody><\/tbody><\/table>');
 
         // Make array for send in /marketTranslit/
-        for (sp of min_time_result['legs']){
+        for (var sp of min_time_result['legs']){
             sourceTransArray.push(sp['start_address']);
             sourceTransArray.push(sp['end_address']);
         }
@@ -73,25 +73,25 @@ var dayRoute = (function(){
         })
 
         // Save best route in bigArrayNorm[calc_result]
-        for (sr of bigArrayNorm){
+        for (var sr of bigArrayNorm){
             if (sr['day'] == day_name){
                 sr.calc_result = min_time_result;
                 continue;
             }
         }
 
-        // Send request for translite and view result table
+        // Send request for translite and view result table // todo ajax
         $.post("marketTranslit/", {'data': uniqueSourceTransArray}, function(data){
             var ReadyTransArray = data['data'];
             // Сохраним словарь ReadyTransArray в translitDict объекта bigArrayNorm
-            for (tr of bigArrayNorm){
+            for (var tr of bigArrayNorm){
                 if (tr['day'] == day_name){
                     tr.translitDict = ReadyTransArray;
                     continue;
                 }
             }
 
-            for (good of min_time_result['legs']){
+            for (var good of min_time_result['legs']){
                 $('#result_tb_1_'+ day_name).append('<tr><td>' + ReadyTransArray[good['start_address']] + '<\/td>' +
                                     '<td>' + ReadyTransArray[good['end_address']] + '<\/td>' +
                                     '<td>' + good['distance']['text'] + '<\/td>' +
@@ -112,7 +112,7 @@ var dayRoute = (function(){
             best_route;
 
         // Find in bigArrayNorm day points
-        for (it of bigArrayNorm){
+        for (var it of bigArrayNorm){
             if (it['day'] == elem.id){
                 break;
             }
@@ -154,8 +154,8 @@ var dayRoute = (function(){
                     it.DirectRenderObj.setDirections(result);
                     it['render_result'] = result;
                 } else {
-                    console.log('Что-то пошло не так, ибо пришел статус: ' + status);
-                    return false
+                    messageModule.addErrorMessage('Ошибка при рендере маршрута на карте. Обратитесь к Администратору. Статус: ' + status);
+                    return
                 }
             });
         } else {
@@ -181,28 +181,26 @@ var dayRoute = (function(){
                     bigArrayNorm.push(day);
                 }
             }
-            delete bigArray;
+            bigArray = null;
             // Count points validation
             for (var cleared_day of bigArrayNorm) {
                 if (cleared_day['points'].length < 3) {
-                    $('#massage').show();
-                    $('#massage').addClass("alert alert-danger").append('<p>' + cleared_day['day'] + ': выбранных точек должно быть не менее 3!</p>');
-                    delete bigArrayNorm;
+                    messageModule.addErrorMessage('Выбранных точек должно быть не менее 3!', cleared_day['day']);
+                    bigArrayNorm = null;
                     return false;
                 }
             }
             return bigArrayNorm;
         },
 
-        makeRouteAutoStart: function(bigArrayNorm) {
+        makeRouteAutoStart: function(bigArrayNorm) { //todo ajax
             for (var day of bigArrayNorm) {
                 $.get("makeRouteAutoStart/", {'sendDay': day['day'], 'pointsArray': day['points']}, function(data){
                     // If return fail
                     if (data['status'] == 'Fail'){
                         $('body').loading('stop');
-                        $('#massage').show();
-                        $('#massage').addClass("alert alert-danger").append('<p>'+ data['error_massage'] +'</p>');
-                        return false
+                        messageModule.addErrorMessage(data['error_massage']);
+                        return
                     } else {
                         var day = data['day'];
                         var result = data['data'][0];
@@ -212,14 +210,14 @@ var dayRoute = (function(){
             }
         },
 
-        makeRouteFixStart: function(bigArrayNorm) {
+        makeRouteFixStart: function(bigArrayNorm) { //todo ajax
             for (var day of bigArrayNorm){
                 $.get("makeRouteFixStart/", {'sendDay': day['day'], 'pointsArray': day['points']}, function(data){
                     // If return fail
                     if (data['status'] == 'Fail'){
                         $('body').loading('stop');
-                        $('#massage').show();
-                        $('#massage').addClass("alert alert-danger").append('<p>'+ data['error_massage'] +'</p>');
+                        messageModule.addErrorMessage(data['error_massage']);
+                        return
                     } else {
                         var day = data['day'];
                         var result = data['data'][0];

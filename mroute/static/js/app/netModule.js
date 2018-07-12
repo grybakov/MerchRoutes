@@ -1,33 +1,33 @@
 /* netModule.js */
 
-// "use strict"; TODO use strict
+"use strict";
 
 var netModule = (function() {
 
-    var $filter = '.row.filter-map',
-        clusterImagePath = 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m';
+    const $filter = '.row.filter-map';
+    const clusterImagePath = 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m';
 
     function findNetObj(element) {
         var element_code = $(element).val();
-        for (netObj of filtersArray){
+        for (var netObj of filtersArray){
             if (netObj.code == element_code) {
                 return netObj;
             }
         }
     };
 
-    function getMarkets(netObj) {
+    function getMarkets(netObj) { // todo ajax
         $.get("getMarkets/", {'NET':netObj.code}, function(data){
 
             var markers = [];
 
             netObj.data_markets = JSON.parse(JSON.stringify(data));
 
-            for (i = 0; i < netObj.data_markets.data.length; i++) {
+            for (var i = 0; i < netObj.data_markets.data.length; i++) {
                 var market_lat = netObj.data_markets.data[i]['market_lat'];
                 var market_lng = netObj.data_markets.data[i]['market_lng'];
 
-                marker = new google.maps.Marker({
+                var marker = new google.maps.Marker({
                     position: new google.maps.LatLng(market_lat, market_lng),
                     map: map
                 });
@@ -43,7 +43,7 @@ var netModule = (function() {
             }
 
             if (netObj.icon_link){
-                for (mk of markers) {
+                for (var mk of markers) {
                     mk.setIcon({url: netObj.icon_link});
                 }
             }

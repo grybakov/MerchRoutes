@@ -1,6 +1,6 @@
 /* tableModule.js */
 
-// "use strict"; TODO use strict
+"use strict";
 
 var tableModule = (function() {
 
@@ -40,22 +40,20 @@ var tableModule = (function() {
 
     function controlDuplicate(item) {
         // Get address
-        var addr_val_list = [];
+        var addr_list = [];
 
         $($input).each(function(indx, element){
-            addr_val_list.push($(element).val());
+            addr_list.push($(element).val());
         });
 
-        // Find duplicate points #TODO + var!
-        for (addr_val of addr_val_list) {
-            var new_addr_val_list = addr_val_list.slice();
-            new_addr_val_list.splice(new_addr_val_list.indexOf(addr_val), 1);
-            for (new_addr_val of new_addr_val_list) {
-                if (addr_val == new_addr_val) {
+        // Find duplicate points
+        for (var addr of addr_list) {
+            var new_addr_list = addr_list.slice();
+            new_addr_list.splice(new_addr_list.indexOf(addr), 1);
+            for (var new_addr of new_addr_list) {
+                if (addr == new_addr) {
                     $($buttonView).prop('disabled', true);
-                    // MessageModule TODO
-                    $('#massage').show();
-                    $('#massage').addClass("alert alert-danger").append('<p>В таблице имеются дубликаты точек!</p>');
+                    messageModule.addErrorMessage('В таблице имеются дубликаты точек! Так быть не должно.');
                     break;
                 }
             }
@@ -109,8 +107,8 @@ var tableModule = (function() {
             $($input).each(function(index, element){
                 // TODO cut == '' ?
                 if ($(element).val() == '') {
-                    $('#massage').addClass("alert alert-danger").append('<p>Вы должны выбрать значения во всех строках таблицы!</p>');
-                    return false;
+                    messageModule.addErrorMessage('Вы должны выбрать значения во всех строках таблицы!');
+                    return;
                 }
             });
         }

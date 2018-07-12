@@ -317,6 +317,6 @@ def SaveRoute(request):
     except Exception:
         response = {'data': 'При сохранении произошла неведомая ошибка.', 'status': 'Fail'}
         return JsonResponse(response)
-    response = {'data': 'Успешно сохранено!', 'status': 'OK'}
+    response = {'data': 'Маршрут успешно сохранен!', 'status': 'OK'}
     return JsonResponse(response)
 

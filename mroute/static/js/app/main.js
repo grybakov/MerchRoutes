@@ -1,6 +1,6 @@
 /* MerchRoutes - main.js */
 
-// 'use strict';
+"use strict";
 
 $(window).load(
     function(){
@@ -31,6 +31,7 @@ $(window).load(
                 }
 
                 bigArrayNorm = dayRoute.controlCountPoints(bigArray);
+                if (!bigArrayNorm) { return; }
 
                 // Show loader!!!!!!!!!!!!!
                 // $('body').loading({message:'Подождите, пожалуйста, немного..'});
@@ -56,12 +57,18 @@ $(window).load(
             function(){
                 var dataArray = {'name_route': $("#id_route_name").val(), 'desc_route': $("#id_route_desc").val(), 'rawArray': bigArrayNorm};
                 $('#SaveModal1').modal('hide');
-                $.post("SaveRoute/", CircularJSON.stringify(dataArray), function(data){
-                    $('#massage').show();
-                    $('#massage').addClass("alert alert-success").append('<p>' + data['data'] + '</p>');
-                }, "json");
-            }
-        );
+                $.ajax({type: 'POST',
+                contentType: 'application/json',
+                url: 'SaveRoute/',
+                data: CircularJSON.stringify(dataArray),
+                success: function(data) {
+                    messageModule.addSuccessMessage(data['data']);
+                },
+                error: function(jqXHR, exception) {
+                    messageModule.addErrorMessage('Ошибка при сохранении маршрута: '  + jqXHR.status + ' ' + exception + ' Обратитесь к Администратору.');
+                }
+            });
+        });
 
         // Export route in *.xls
         $($buttonXlsReport).click(
@@ -72,6 +79,9 @@ $(window).load(
                 data: CircularJSON.stringify(bigArrayNorm),
                 success: function(data) {
                     window.open('data:application/vnd.ms-excel;base64,'+data, '_blank');
+                },
+                error: function(jqXHR, exception) {
+                    messageModule.addErrorMessage('Ошибка при формировании xls файла: '  + jqXHR.status + ' ' + exception + ' Обратитесь к Администратору.');
                 }
             });
         });
@@ -79,11 +89,13 @@ $(window).load(
 
 function clearElementsResult() {
     // Delete routes from the map
-    for (var mk of bigArrayNorm){
-        mk.DirectRenderObj.setMap(null);
+    if (bigArrayNorm != false) {
+        for (var mk of bigArrayNorm){
+            mk.DirectRenderObj.setMap(null);
+        }
     }
     // Delete massages
-    $('.alert').empty().hide();
+    $('#message').empty().hide();
     // Clear result_table_1 div
     $("div.result_table_1").empty()
     // Disabled buttons
@@ -104,11 +116,11 @@ function getFilterNets() {
                     filtersArray.push(filter);
                 }
             } else {
-                // TODO error massage
+                messageModule.addErrorMessage('Ошибка при получении списка сетей: ' + data['status']);
             }
         },
-        error: function(data) {
-            // TODO error massage
+        error: function(jqXHR, exception) {
+            messageModule.addErrorMessage('Ошибка при получении списка сетей: '  + jqXHR.status + ' ' + exception + ' Обратитесь к Администратору.');
         }
     })
 };
