@@ -134,13 +134,13 @@ var dayRoute = (function(){
             var finish_point = it['translitDict'][best_route['legs'][(best_route['legs'].length - 1)]['end_address']];
 
             // Make waypoints
-            way_points = it['points'].slice();
+            var way_points = it['points'].slice();
             way_points.splice(way_points.indexOf(start_point), 1);
             way_points.splice(way_points.indexOf(finish_point), 1);
 
             // Code DirectionsWaypoint[]
             var waypts = [];
-            for (f of  way_points){
+            for (var f of  way_points){
                 waypts.push({
                     location: f,
                     stopover: true
@@ -203,6 +203,7 @@ var dayRoute = (function(){
         makeRouteAutoStart: function(bigArrayNorm) {
             for (var day of bigArrayNorm) {
                 $.get("makeRouteAutoStart/", {'sendDay': day['day'], 'pointsArray': day['points']}, function(data){
+                    $('body').loading('stop');
                     // If return fail
                     if (data['status'] == 'Fail'){
                         $('body').loading('stop');
@@ -220,6 +221,7 @@ var dayRoute = (function(){
         makeRouteFixStart: function(bigArrayNorm) {
             for (var day of bigArrayNorm){
                 $.get("makeRouteFixStart/", {'sendDay': day['day'], 'pointsArray': day['points']}, function(data){
+                    $('body').loading('stop');
                     // If return fail
                     if (data['status'] == 'Fail'){
                         $('body').loading('stop');

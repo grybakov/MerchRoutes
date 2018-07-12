@@ -34,8 +34,7 @@ $(window).load(
                 bigArrayNorm = dayRoute.controlCountPoints(bigArray);
                 if (!bigArrayNorm) { return; }
 
-                // Show loader!!!!!!!!!!!!!
-                // $('body').loading({message:'Подождите, пожалуйста, немного..'});
+                $('body').loading({message:'Подождите, пожалуйста, немного..'});
 
                 // Request to backend
                 if ($($routeCheck).is(':checked')) {
@@ -74,6 +73,8 @@ $(window).load(
         // Export route in *.xls
         $($buttonXlsReport).click(
             function() {
+                $('body').loading({message:'Подождите, пожалуйста, немного..'});
+
                 $.ajax({type: 'POST',
                 contentType: 'application/json',
                 url: 'makeXlsReport/',
@@ -83,6 +84,9 @@ $(window).load(
                 },
                 error: function(jqXHR, exception) {
                     messageModule.addErrorMessage('Ошибка при формировании xls файла: '  + jqXHR.status + ' ' + exception + ' Обратитесь к Администратору.');
+                },
+                complete: function() {
+                    $('body').loading('stop');
                 }
             });
         });
