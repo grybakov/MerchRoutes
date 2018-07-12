@@ -16,7 +16,7 @@ var netModule = (function() {
         }
     };
 
-    function getMarkets(netObj) { // todo ajax
+    function getMarkets(netObj) {
         $.get("getMarkets/", {'NET':netObj.code}, function(data){
 
             var markers = [];

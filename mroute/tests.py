@@ -107,20 +107,27 @@ class AddMarketViewTest(TestCase):
 class MarketTranslitViewTest(TestCase):
 
     fixtures = ['markets.json']
+    correct_market_list = ['Ulitsa Onezhskaya, 34, Moskva, Russia, 125413',
+                           'Yasnogorskaya Ulitsa, 2, Moskva, Russia, 117588',
+                           'Prokatnaya Ulitsa, 2, Moskva, Russia, 111555']
+
     correct_market = {'Ulitsa Onezhskaya, 34, Moskva, Russia, 125413': 'г. Москва, Онежская Улица, д. 34',
                       'Yasnogorskaya Ulitsa, 2, Moskva, Russia, 117588': 'Москва, Ясногорская ул., д. 2',
                       'Prokatnaya Ulitsa, 2, Moskva, Russia, 111555': 'г. Москва, ул. Прокатная, д. 2'}
 
     def test_url_exists_at_desired_location(self):
-        response = self.client.post('/marketTranslit/', {'data[]': self.correct_market.keys()})
+        response = self.client.post('/marketTranslit/', json.dumps({'data': self.correct_market_list}),
+                                    content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
     def test_url_accessible_by_name(self):
-        response = self.client.post(reverse('marketTranslit'), {'data[]': self.correct_market.keys()})
+        response = self.client.post(reverse('marketTranslit'), json.dumps({'data': self.correct_market_list}),
+                                    content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
     def test_success_translit(self):
-        response = self.client.post(reverse('marketTranslit'), {'data[]': self.correct_market.keys()})
+        response = self.client.post(reverse('marketTranslit'), json.dumps({'data': self.correct_market_list}),
+                                    content_type='application/json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['status'], 'OK')
         self.assertEqual(response.json()['data'], self.correct_market)
@@ -274,29 +281,24 @@ class SaveRouteViewTest(TestCase):
                               "\"Новомосковск, ул. Калинина, 22/47\","
                               "\"М.О, г. Чехов, Симферопольское ш. д.1\"]}]"}
 
-    @skip("TODO - Don't work")
     def test_url_exists_at_desired_location(self):
-        payload = self.test_route
-        # client = Client(CONTENT_TYPE='application/x-www-form-urlencoded; charset=UTF-8')
-        response = self.client.post('/SaveRoute/', payload)
+        response = self.client.post('/SaveRoute/', json.dumps(self.test_route), content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
-    @skip("TODO - Don't work")
     def test_url_accessible_by_name(self):
-        response = self.client.post(reverse('SaveRoute'), self.test_route)
+        response = self.client.post(reverse('SaveRoute'), json.dumps(self.test_route), content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
-    @skip("TODO - Don't work")
     def test_success_save_route(self):
-        response = self.client.post(reverse('SaveRoute'), self.test_route)
+        response = self.client.post(reverse('SaveRoute'), json.dumps(self.test_route), content_type='application/json')
         self.assertEqual(response.status_code, 200)
         # response
-        self.assertEqual(response['status'], 'OK')
+        self.assertEqual(response.json()['status'], 'OK')
         # in BD
         route = RouteModel.objects.all()
         self.assertEqual(len(route), 1)
         self.assertEqual(route[0].route_name, self.test_route['name_route'])
-        self.assertEqual(route[0].route_desc, self.test_route['route_desc'])
+        self.assertEqual(route[0].route_desc, self.test_route['desc_route'])
         self.assertEqual(route[0].route_rawArray, self.test_route['rawArray'])
         self.assertEqual(route[0].route_status, True)
 

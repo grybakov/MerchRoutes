@@ -11,6 +11,7 @@ $(window).load(
         window.$buttonSave = '#button_save_route',
         window.$buttonXlsReport = '#button_xls_report',
         window.$filter = '.row.filter-map',
+        window.$routeCheck = '#RouteCheck',
         window.filtersArray = [],
         window.bigArrayNorm = [];
 
@@ -37,7 +38,7 @@ $(window).load(
                 // $('body').loading({message:'Подождите, пожалуйста, немного..'});
 
                 // Request to backend
-                if ($('#RouteCheck').is(':checked')) {
+                if ($($routeCheck).is(':checked')) {
                     dayRoute.makeRouteAutoStart(bigArrayNorm);
                 } else {
                     dayRoute.makeRouteFixStart(bigArrayNorm);

@@ -80,8 +80,12 @@ var dayRoute = (function(){
             }
         }
 
-        // Send request for translite and view result table // todo ajax
-        $.post("marketTranslit/", {'data': uniqueSourceTransArray}, function(data){
+        // Send request for translite and view result table
+        $.ajax({type: 'POST',
+        contentType: 'application/json',
+        url: 'marketTranslit/',
+        data: JSON.stringify({'data': uniqueSourceTransArray}),
+        success: function(data) {
             var ReadyTransArray = data['data'];
             // Сохраним словарь ReadyTransArray в translitDict объекта bigArrayNorm
             for (var tr of bigArrayNorm){
@@ -101,7 +105,10 @@ var dayRoute = (function(){
             // Разблокируем кнопу генерации отчета
             $('#button_xls_report').prop('disabled', false);
             $('#button_save_report').removeClass("disabled");
-        }, "json");
+        },
+        error: function(jqXHR, exception) {
+            messageModule.addErrorMessage('Ошибка при транслитерации адресов: '  + jqXHR.status + ' ' + exception + ' Обратитесь к Администратору.');
+        }});
 
         // Hide loader
         // $('body').loading('stop');
@@ -193,7 +200,7 @@ var dayRoute = (function(){
             return bigArrayNorm;
         },
 
-        makeRouteAutoStart: function(bigArrayNorm) { //todo ajax
+        makeRouteAutoStart: function(bigArrayNorm) {
             for (var day of bigArrayNorm) {
                 $.get("makeRouteAutoStart/", {'sendDay': day['day'], 'pointsArray': day['points']}, function(data){
                     // If return fail
@@ -210,7 +217,7 @@ var dayRoute = (function(){
             }
         },
 
-        makeRouteFixStart: function(bigArrayNorm) { //todo ajax
+        makeRouteFixStart: function(bigArrayNorm) {
             for (var day of bigArrayNorm){
                 $.get("makeRouteFixStart/", {'sendDay': day['day'], 'pointsArray': day['points']}, function(data){
                     // If return fail

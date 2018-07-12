@@ -64,8 +64,8 @@ def addmarket(request):
 @require_http_methods(['POST'])
 def marketTranslit(request):
     translitArray = {}
-    req_dict = dict(request.POST)
-    rlist = req_dict.get('data[]')
+    req_dict = json.loads(request.body)
+    rlist = req_dict['data']
     for i in range(len(rlist)):
         addr = rlist[i]
         queryset = MarketModel.objects.filter(market_address_en=addr).values('market_address_ru')
@@ -98,7 +98,6 @@ def getNets(request):
 
 # Отдает все точки запрошенной сети (фильтр для Google Maps).
 @require_http_methods(['GET'])
-# TODO POST
 def getMarkets(request):
     queryset = MarketModel.objects.filter(market_is_active=True, market_net=request.GET['NET']).values()
     response = {'data': list(queryset), 'status': 'OK'}
