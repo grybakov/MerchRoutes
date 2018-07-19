@@ -1,5 +1,8 @@
-import os
 import requests
+import json
+import time
+
+import googlemaps
 
 from django.core.management.base import BaseCommand, CommandError
 from mroute.models import MarketModel
@@ -11,38 +14,48 @@ from mroute.models import MarketModel
 
 class Command(BaseCommand):
 
-    test_data = ['', '', '', '', ]
-
     def add_arguments(self, parser):
-        parser.add_argument('market_file', nargs='+', type=str)
+        parser.add_argument('market_net', nargs='+', type=str)
 
     def handle(self, *args, **options):
 
-        GOOGLE_API_KEY_GEOCODE = 'AIzaSyA_M1UNrgnO7gOnafPEFtTwHdWozBQG5zo'
+        # Google API Key
+        GOOGLE_API_KEY = 'AIzaSyA_M1UNrgnO7gOnafPEFtTwHdWozBQG5zo'
 
-        # TODO checking incorrect points
+        # Checking from Directions API
+        waypoints_list = []
+        error_list = []
 
-        """pyth_file = os.getcwd() + '\\' + options['market_file'][0]
-        with open(pyth_file, 'r') as file_list:
-            for addr in file_list:
-                # Удаление пробелов в начале и в конце и переносы строк!
-                addr = addr.strip(' \n\t\r')
-                # Получаем координаты точек маршрута через GOOGLE GEOCODE и укладываем в geo_list
-                geo_req = googlemaps.Client(key=GOOGLE_API_KEY_GEOCODE)
-                geo_point = geo_req.geocode(addr)
-                if geo_point != []:
-                    market = MarketModel(market_net=NET, market_address_ru=addr,
-                                         market_address_en=geo_point[0]['formatted_address'],
-                                         market_lat=geo_point[0]['geometry']['location']['lat'],
-                                         market_lng=geo_point[0]['geometry']['location']['lng'],
-                                         market_is_active=True)
-                    market.save()
-                    self.stdout.write(self.style.SUCCESS('Адрес: {0} - успешно добавлен в БД'.format(addr)))
-                    success_count = success_count + 1
-                else:
-                    self.stdout.write(self.style.WARNING('Ошибка! Адрес: {0}. Статус: {1}'.format(addr, geo_point['status'])))
-                    error_count = error_count + 1
-                    error_array.append(addr) """
+        markets = MarketModel.objects.filter(market_net=options['market_net'][0]).values_list('market_address_ru',
+                                                                                              flat=True)
+        ad_list = list(markets)
 
+        for ad in ad_list:
+            time.sleep(0.4)
+            self.stdout.write(self.style.SUCCESS('Чекаем адрес: {0}'.format(ad)))
+            gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
 
+            # Correct points
+            start_point = 'Широкая ул., 9, Москва, 127282'
+            finish_point = 'Краснопрудная ул., 13 Москва 107140'
+            waypoints_list.append(ad)
+
+            routes = gmaps.directions(start_point, finish_point,
+                                      mode="walking",
+                                      waypoints=waypoints_list,
+                                      units="metric",
+                                      optimize_waypoints=True)
+
+            if not routes:
+                self.stdout.write(self.style.WARNING('Ошибка! Адрес: {0} - не точное соответствие!'.format(ad)))
+                error_list.append(ad)
+
+            queryset = MarketModel.objects.filter(market_address_ru=ad).values('market_address_en')
+            if queryset[0]['market_address_en'] != routes[0]['legs'][0]['end_address']:
+                self.stdout.write(self.style.WARNING('Ошибка! Адрес: {0} - не точное соответствие!'.format(ad)))
+                error_list.append(ad)
+
+            waypoints_list = []
+
+        print('ERROR: ' + str(error_list))
 

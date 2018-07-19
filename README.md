@@ -5,7 +5,7 @@ Merchant Routes
 [![Coverage Status](https://coveralls.io/repos/github/grybakov/MerchRoutes/badge.svg?branch=master)](https://coveralls.io/github/grybakov/MerchRoutes?branch=master)
 
 The Merchant Routes is an open source application for creating routes for foot merchandisers, couriers, etc.
-In Merchant Routes uses Google Maps API (Directions API, Geocoding API)
+Merchant Routes uses Google Maps API (Directions API, Geocoding API)
 
 ![alt text](https://github.com/grybakov/MerchRoutes/blob/master/mroute/static/screens/Screenshot_1.png "Merchant Routes Screenshot Map")
 
