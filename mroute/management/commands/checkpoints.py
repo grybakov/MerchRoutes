@@ -20,7 +20,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # Google API Key
-        GOOGLE_API_KEY = 'AIzaSyA_M1UNrgnO7gOnafPEFtTwHdWozBQG5zo'
+        # GOOGLE_API_KEY = 'AIzaSyA_M1UNrgnO7gOnafPEFtTwHdWozBQG5zo'
+        GOOGLE_API_KEY = 'AIzaSyANKi1OxqKG-kRMoy211FigNI6vIIFYf_Y'
 
         # Checking from Directions API
         waypoints_list = []
