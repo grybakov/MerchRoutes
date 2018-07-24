@@ -67,7 +67,7 @@ class AddMarketViewTest(TestCase):
         # message
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'Успешно сохранено.')
+        self.assertEqual(str(messages[0]), 'Адрес успешно сохранен в БД.')
         # in BD
         market = MarketModel.objects.all()
         self.assertEqual(len(market), 1)
@@ -88,13 +88,24 @@ class AddMarketViewTest(TestCase):
         market = MarketModel.objects.all()
         self.assertEqual(len(market), 0)
 
-    def test_fail_save_market_incorrect_market_address_ru(self):
+    def test_fail_save_market_incorrect_market_address_ru_api_exception(self):
         response = self.client.post(reverse('addmarket'),
                                     {'market_net': 'PRKRS', 'market_address_ru': 'д. Нереальная д.666'})
         self.assertEqual(response.status_code, 200)
         messages = list(response.context['messages'])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), 'При сохранении произошла ошибка. Обратитесь к Администратору.')
+        self.assertEqual(str(messages[0]), 'Ошибка! Добавить этот адрес не получится. NOT_FOUND')
+        # in BD
+        market = MarketModel.objects.all()
+        self.assertEqual(len(market), 0)
+
+    def test_fail_save_market_incorrect_market_address_ru_geocode_error(self):
+        response = self.client.post(reverse('addmarket'),
+                                    {'market_net': 'PRKRS', 'market_address_ru': 'пр-т Алабамова, 999, Москва, 129090'})
+        self.assertEqual(response.status_code, 200)
+        messages = list(response.context['messages'])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Ошибка проверки адреса. Добавить этот адрес не получится.')
         # in BD
         market = MarketModel.objects.all()
         self.assertEqual(len(market), 0)

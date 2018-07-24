@@ -3,6 +3,7 @@ import sys
 import copy
 import json
 import base64
+import time
 import math
 
 import xlsxwriter
@@ -13,15 +14,16 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib import messages
-from django.urls import reverse
 
 from .models import MarketModel, RouteModel, MetroModel, NetModel
 from .forms import MarketForm, SaveRouteForm
 
 
 # Google API Key
-GOOGLE_API_KEY = 'AIzaSyA_M1UNrgnO7gOnafPEFtTwHdWozBQG5zo'
+GOOGLE_API_KEY = 'AIzaSyBalux3xbMbr7DBPaGjXsY4HPB55Zr8A5c'
 GOOGLE_API_KEY_GEOCODE = 'AIzaSyAPGRaziW2AmkRSTgfvaKB7Ddw-cgaMGUQ'
+
+SLEEP_TIME = 0.2
 
 
 @require_http_methods(['GET'])
@@ -37,22 +39,48 @@ def news(request):
 
 @require_http_methods(['GET', 'POST'])
 def addmarket(request):
+
+    start_point = 'Широкая ул., 9, Москва, 127282'
+    finish_point = 'Краснопрудная ул., 13 Москва 107140'
+    waypoints_list = []
+
     if request.method == 'POST':
         form = MarketForm(request.POST)
         if form.is_valid():
             market = form.save(commit=False)
-            # GEO
-            gmaps = googlemaps.Client(key=GOOGLE_API_KEY_GEOCODE)
-            geocode_result = gmaps.geocode(request.POST['market_address_ru'])
-            if geocode_result != []:
-                market.market_address_en = geocode_result[0]['formatted_address']
-                market.market_lat = geocode_result[0]['geometry']['location']['lat']
-                market.market_lng = geocode_result[0]['geometry']['location']['lng']
-                market.market_is_active = True
-                market.save()
-                messages.success(request, 'Успешно сохранено.')
+            # check point
+            check_gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
+            waypoints_list.append(request.POST['market_address_ru'])
+
+            try:
+                routes = check_gmaps.directions(start_point, finish_point,
+                                                mode="walking",
+                                                waypoints=waypoints_list,
+                                                units="metric",
+                                                optimize_waypoints=True)
+
+                # if not routes:
+                #     messages.error(request, 'Ошибка проверки адреса. Введите корректный адрес.')
+
+            except googlemaps.exceptions.ApiError as apiError:
+                messages.error(request, 'Ошибка! Добавить этот адрес не получится. {0}'.format(apiError))
             else:
-                messages.error(request, 'При сохранении произошла ошибка. Обратитесь к Администратору.')
+                # GEO
+                gmaps = googlemaps.Client(key=GOOGLE_API_KEY_GEOCODE)
+                geocode_result = gmaps.geocode(request.POST['market_address_ru'])
+
+                if not routes or not geocode_result or geocode_result[0]['geometry']['location_type'] != 'ROOFTOP':
+                    messages.error(request, 'Ошибка проверки адреса. Добавить этот адрес не получится.')
+                else:
+                    if geocode_result[0]['formatted_address'] == routes[0]['legs'][0]['end_address']:
+                        market.market_address_en = geocode_result[0]['formatted_address']
+                        market.market_lat = geocode_result[0]['geometry']['location']['lat']
+                        market.market_lng = geocode_result[0]['geometry']['location']['lng']
+                        market.market_is_active = True
+                        market.save()
+                        messages.success(request, 'Адрес успешно сохранен в БД.')
+                    else:
+                        messages.error(request, 'Не точное совпадение адреса. Добавить его не получится.')
         else:
             messages.error(request, 'Форма заполнена не верно! Заполните заново или обратитесь к Администратору.')
     else:
@@ -119,6 +147,7 @@ def makeRouteFixStart(request):
     all_points = load_points
 
     for finish_point in all_points:
+        time.sleep(SLEEP_TIME)
         waypoints_list = copy.deepcopy(all_points)
         waypoints_list.remove(finish_point)
         # Просим Google дать данные по маршруту
@@ -151,7 +180,7 @@ def makeRouteFixStart(request):
 @require_http_methods(['GET'])
 def makeRouteAutoStart(request):
 
-    MAX_METRO_R = 0.7  # Км
+    MAX_METRO_R = 1.5  # Км
 
     # Счетчики перебора
     min_time_iter = sys.maxsize
@@ -209,6 +238,7 @@ def makeRouteAutoStart(request):
 
     # Опрашиваем Google на предмет оптимального маршрута
     for e in sort_start_points_list:
+        time.sleep(SLEEP_TIME)
         routes = 0
         start_point = e
         new_all_points = copy.deepcopy(other_list)
