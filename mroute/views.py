@@ -176,11 +176,34 @@ def makeRouteFixStart(request):
     return JsonResponse(response)
 
 
+# Поиск возможных стартовых точек в указанном радиусе
+def checkStartPoints(geo_list, R):
+
+    metro_dict = MetroModel.objects.filter(metro_is_active=True).values()
+
+    start_points_list = []
+    for goo in geo_list:
+        lat0 = goo['point_lat']
+        lon0 = goo['point_lng']
+        for m in metro_dict:
+            lat = m['metro_lat']
+            lon = m['metro_lng']
+            p = 0.017453292519943295  # Math.PI / 180
+            a = 0.5 - math.cos((lat - lat0) * p) / 2 + math.cos(lat0 * p) * math.cos(lat * p) * (1 - math.cos((lon - lon0) * p)) / 2
+            ss = 12742 * math.asin(math.sqrt(a))  # 2 * R; R = 6371 km
+            if R >= ss:
+                start_points_list.append(goo)
+
+    return start_points_list
+
+
 # Создает марщруты с автоматическим определением стартовой точки возле ближайшего метро.
 @require_http_methods(['GET'])
 def makeRouteAutoStart(request):
 
-    MAX_METRO_R = 1.5  # Км
+    MAX_METRO_R = 2.5  # Км
+    MIN_METRO_R = 0.5
+    STEP_METRO_R = 0.1
 
     # Счетчики перебора
     min_time_iter = sys.maxsize
@@ -193,8 +216,6 @@ def makeRouteAutoStart(request):
     load_day = req_dict['sendDay'][0]
     load_points = req_dict['pointsArray[]']
 
-    metro_dict = MetroModel.objects.filter(metro_is_active=True).values()
-
     # Получаем координаты точек маршрута из БД и укладываем в geo_list
     geo_list = []
     for point in load_points:
@@ -206,24 +227,18 @@ def makeRouteAutoStart(request):
         geo_dict['point_lng'] = queryset[0]['market_lng']
         geo_list.append(geo_dict)
 
-    # Поиск возможных стартовых точек в заданном радиусе MAX_METRO_R
+    # Поиск возможных стартовых точек в указанном радиусе
     start_points_list = []
-    for goo in geo_list:
-        lat0 = goo['point_lat']
-        lon0 = goo['point_lng']
-        for m in metro_dict:
-            lat = m['metro_lat']
-            lon = m['metro_lng']
-            p = 0.017453292519943295  # Math.PI / 180
-            a = 0.5 - math.cos((lat - lat0) * p) / 2 + math.cos(lat0 * p) * math.cos(lat * p) * (1 - math.cos((lon - lon0) * p)) / 2
-            ss = 12742 * math.asin(math.sqrt(a))  # 2 * R; R = 6371 km
-            if MAX_METRO_R >= ss:
-                start_points_list.append(goo)
+    while MIN_METRO_R <= MAX_METRO_R:
+        start_points_list = checkStartPoints(geo_list, MIN_METRO_R)
+        if start_points_list:
+            break
+        MIN_METRO_R += STEP_METRO_R
 
     # Если не найдено ни одной стартовой точки в пределах MAX_METRO_R, завершаем работу
     if not start_points_list:
-        response = {'day': load_day, 'error_massage': 'В пределах заданного радиуса ({0} км.) не удалось найти ни одной'
-                                                      ' стартовой точки.'.format(MAX_METRO_R), 'status': 'Fail'}
+        response = {'day': load_day, 'error_massage': 'В пределах максимального радиуса ({0} км.) не удалось найти '
+                                                      'ни одной стартовой точки.'.format(MAX_METRO_R), 'status': 'Fail'}
         return JsonResponse(response)
 
     # Подготавливаем списки точек
