@@ -188,6 +188,11 @@ var dayRoute = (function(){
                     bigArrayNorm.push(day);
                 }
             }
+            // Validation for counts points = 0
+            if (bigArrayNorm.length == 0) {
+                messageModule.addErrorMessage('Ни за один из дней ничего не выбрано! В маршруте для дня должно быть не менее 3 точек.');
+                return false;
+            }
             bigArray = null;
             // Count points validation
             for (var cleared_day of bigArrayNorm) {
