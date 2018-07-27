@@ -253,7 +253,7 @@ var dayRoute = (function(){
                 glaz.toggleClass('glyphicon-eye-close', false);
                 glaz.toggleClass('glyphicon-eye-open');
                 // Delete route on map
-                for (y of bigArrayNorm){
+                for (var y of bigArrayNorm){
                     if (y['day'] == elem.id){
                         y.DirectRenderObj.setMap(null);
                     }
