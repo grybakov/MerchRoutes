@@ -3,6 +3,7 @@
 __pycache__
 pyvenv
 pyvenv.cfg
+pip-selfcheck.json
 db.sqlite3
 /Include
 /addr_market_lists
