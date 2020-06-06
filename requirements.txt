@@ -14,7 +14,7 @@ future==0.16.0
 googlemaps==2.5.1
 idna==2.6
 pytz==2018.3
-requests==2.18.4
+requests==2.20.0
 selene==1.0.0a13
 selenium==3.14.0
 six==1.11.0
