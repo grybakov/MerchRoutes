@@ -18,6 +18,6 @@ requests==2.18.4
 selene==1.0.0a13
 selenium==3.14.0
 six==1.11.0
-urllib3==1.22
+urllib3==1.26.5
 webdriver-manager==1.7
 XlsxWriter==1.0.4
